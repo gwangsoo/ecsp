@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  broker:
+    image: lensesio/fast-data-dev
+    hostname: broker
+    container_name: broker
+    ports:
+      - "2181:2181"
+      - "3030-3031:3030-3031"
+      - "8081:8081"
+      - "9092:9092"
+
+  mysql:
+    build: ./mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+      - USE_DB_ID=1
+
+  cdcservice:
+    image: eventuateio/eventuate-cdc-service:0.16.0.RELEASE
+    hostname: cdcservice
+    container_name: cdcservice
+    ports:
+      - "8099:8080"
+    depends_on:
+      - mysql
+      - broker
+    environment:
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: broker:9092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: broker:2181
+      EVENTUATE_CDC_PIPELINE_PIPELINE1_TYPE: eventuate-tram
+      EVENTUATE_CDC_PIPELINE_PIPELINE1_READER: reader1
+      EVENTUATE_CDC_PIPELINE_PIPELINE1_EVENTUATEDATABASESCHEMA: board
+      EVENTUATE_CDC_PIPELINE_PIPELINE2_TYPE: eventuate-tram
+      EVENTUATE_CDC_PIPELINE_PIPELINE2_READER: reader1
+      EVENTUATE_CDC_PIPELINE_PIPELINE2_EVENTUATEDATABASESCHEMA: account
+      EVENTUATE_CDC_READER_READER1_TYPE: mysql-binlog
+      EVENTUATE_CDC_READER_READER1_DATASOURCEURL: jdbc:mysql://mysql/eventuate?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      EVENTUATE_CDC_READER_READER1_DATASOURCEUSERNAME: root
+      EVENTUATE_CDC_READER_READER1_DATASOURCEPASSWORD: rootpassword
+      EVENTUATE_CDC_READER_READER1_DATASOURCEDRIVERCLASSNAME: com.mysql.jdbc.Driver
+      EVENTUATE_CDC_READER_READER1_LEADERSHIPLOCKPATH: /eventuate/cdc/leader/common
+      EVENTUATE_CDC_READER_READER1_CDCDBUSERNAME: root
+      EVENTUATE_CDC_READER_READER1_CDCDBPASSWORD: rootpassword
+      EVENTUATE_CDC_READER_READER1_READOLDDEBEZIUMDBOFFSETSTORAGETOPIC: "false"
+      EVENTUATE_CDC_READER_READER1_MYSQLBINLOGCLIENTUNIQUEID: 1
+      EVENTUATE_CDC_READER_READER1_OFFSETSTOREKEY: MySqlBinlog
+      EVENTUATE_CDC_READER_READER1_OFFSETSTORAGETOPICNAME: offset.storage.common
+      EVENTUATE_CDC_READER_READER1_OUTBOXID: 1
+
+  mongodb:
+    image: mongo:7.0
+    hostname: mongodb
+    container_name: mongodb
+    command: mongod
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
