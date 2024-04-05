@@ -1,0 +1,5 @@
+rootProject.name = 'abc'
+
+include 'abc-main'
+include 'abc-share'
+

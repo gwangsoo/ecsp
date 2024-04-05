@@ -1,0 +1,112 @@
+server:
+  port: ${PORT:8081}
+  shutdown: graceful
+  servlet:
+    context-path: /services/abc
+    session:
+      cookie:
+        secure: true
+        http-only: true
+
+logging:
+  level:
+    ROOT: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.example.abc: DEBUG
+
+eventuate:
+  database:
+    schema: abc
+
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+  zookeeper:
+    connection:
+      string: localhost:2181
+
+spring:
+  application:
+    name: abc
+  profiles:
+    include: springdoc, management
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
+
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+  jmx:
+    enabled: false
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/abc?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+    username: abc_user
+    password: abc_password
+
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: false
+    generate-ddl: true
+    database: mysql
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+      hibernate.timezone.default_storage: NORMALIZE
+      hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      # modify batch size as necessary
+      hibernate.jdbc.batch_size: 25
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+      hibernate.query.in_clause_parameter_padding: true
+      hibernate.format_sql: false
+      hibernate.use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+
+  messages:
+    basename: i18n/messages
+
+  main:
+    allow-bean-definition-overriding: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    problemdetails:
+      enabled: true
+
+  task:
+    execution:
+      thread-name-prefix: care-easy-task-
+      pool:
+        core-size: 1
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: abc-scheduling-
+      pool:
+        size: 2
+
+  output:
+    ansi:
+      console-available: true

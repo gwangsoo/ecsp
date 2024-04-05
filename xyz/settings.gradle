@@ -1,0 +1,5 @@
+rootProject.name = 'xyz'
+
+include 'xyz-main'
+include 'xyz-share'
+

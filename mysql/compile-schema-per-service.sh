@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-for schema in board account;
+for schema in abc xyz;
 do
   user=${schema}_user
   password=${schema}_password

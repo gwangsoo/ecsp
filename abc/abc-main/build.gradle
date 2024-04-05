@@ -1,0 +1,43 @@
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate6"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "org.apache.commons:commons-lang3"
+    testImplementation "org.apache.commons:commons-collections4"
+
+//	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    // openfeign _ resilience4j
+    implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-all:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-feign:${resilience4jVersion}"
+    implementation "io.github.openfeign:feign-core:${openfeignVersion}"
+    implementation "io.github.openfeign:feign-jackson:${openfeignVersion}"
+    implementation "io.github.openfeign:feign-httpclient:${openfeignVersion}"
+
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapiVersion}"
+
+//    implementation ('com.example.abc:abc-share:0.0.1-RELEASE')
+
+    implementation project(':abc-share')
+
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka:$eventuateTramVersion"
+//    implementation "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration:$eventuateTramVersion"
+    implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
+//    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support:$eventuateTramSagasVersion"
+
+    implementation ('com.example.xyz:xyz-share:0.0.1-RELEASE')
+}
