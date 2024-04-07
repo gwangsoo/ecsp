@@ -1,6 +1,6 @@
 package com.example.abc.security.oauth2;
 
-import com.xrfriends.careeasy.careeasybackend.security.SecurityUtils;
+import com.example.abc.security.SecurityUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;

@@ -1,16 +1,12 @@
 package com.example.xyz.domain.dto;
 
-import com.example.common.jpa.AbstractAuditingDTO;
-import com.example.xyz.domain.entity.Xyz;
+import com.example.ecsp.common.jpa.AbstractAuditingDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Set;
 
 @Schema(description = "XYZ 서비스")
 @Data
@@ -33,6 +29,7 @@ public class XyzDetailDTO extends AbstractAuditingDTO<String> implements Seriali
     @Schema(description = "속성값")
     private String attrValue;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "XYZ")
     private XyzDTO xyz;
 }

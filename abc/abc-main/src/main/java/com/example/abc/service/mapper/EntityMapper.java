@@ -1,7 +1,7 @@
 package com.example.abc.service.mapper;
 
-import com.example.common.jpa.AbstractAuditingDTO;
-import com.example.common.util.TsidUtil;
+import com.example.ecsp.common.jpa.AbstractAuditingDTO;
+import com.example.ecsp.common.util.TsidUtil;
 import org.mapstruct.*;
 import org.springframework.util.StringUtils;
 

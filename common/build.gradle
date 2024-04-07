@@ -5,14 +5,15 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.example.common'
-version = '1.0-RELEASE'
+group = 'com.example.ecsp'
+version = '0.0.1-RELEASE'
 
 java {
 	sourceCompatibility = '17'
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -43,20 +44,20 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-//publishing {
-//    publications {
-//        library(MavenPublication) {
-//            from components.java
-//        }
-//    }
-//    repositories {
-//        mavenLocal()
-//        maven {
-//            credentials {
-//                username 'admin'
-//                password '!!!adtcaps!!!'
-//            }
-//            url "https://nexus.makecloud.me:8443/repository/maven-releases/"
-//        }
-//    }
-//}
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+//            allowInsecureProtocol true
+            credentials {
+                username 'xrf'
+                password 'xrf!!00'
+            }
+            url "https://nexus.xr-friends.com/repository/maven-releases/"
+        }
+    }
+}

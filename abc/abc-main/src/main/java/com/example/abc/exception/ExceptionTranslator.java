@@ -1,7 +1,7 @@
 package com.example.abc.exception;
 
 import com.example.abc.config.Constants;
-import com.example.common.util.HeaderUtil;
+import com.example.ecsp.common.util.HeaderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;

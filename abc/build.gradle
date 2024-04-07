@@ -1,22 +1,29 @@
-//buildscript {
-//    ext {
-//        set('springCloudVersion', "${springCloudVersion}")
-//    }
-//
-//    repositories {
-//        mavenLocal()
-//        mavenCentral()
-//    }
-//
-//    dependencies {
-//        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-//        classpath "io.spring.gradle:dependency-management-plugin:1.1.4"
-//    }
-//}
+buildscript {
+    ext {
+        set('springCloudVersion', "${springCloudVersion}")
+    }
+
+    repositories {
+        mavenLocal()
+        maven {
+            credentials {
+                username 'xrf'
+                password 'xrf!!00'
+            }
+            url "https://nexus.xr-friends.com/repository/maven-releases/"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.4"
+    }
+}
 
 
 allprojects {
-    group 'org.example.abc'
+    group 'com.example.ecsp'
     version '0.0.1-RELEASE'
 }
 
@@ -32,39 +39,39 @@ subprojects {
 
     repositories {
         mavenLocal()
-//        maven {
-//            credentials {
-//                username 'admin'
-//                password '!!!adtcaps!!!'
-//            }
-//            url "https://nexus.makecloud.me:8443/repository/maven-releases/"
-//        }
+        maven {
+            credentials {
+                username 'xrf'
+                password 'xrf!!00'
+            }
+            url "https://nexus.xr-friends.com/repository/maven-releases/"
+        }
         mavenCentral()
     }
 
-//    publishing {
-//        publications {
-//            library(MavenPublication) {
-//                from components.java
-//            }
-//        }
-//        repositories {
-//            maven {
-//                credentials {
-//                    username 'admin'
-//                    password '!!!adtcaps!!!'
-//                }
-//                url "https://nexus.makecloud.me:8443/repository/maven-releases/"
-//            }
-//        }
-//    }
+    publishing {
+        publications {
+            library(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                credentials {
+                    username 'xrf'
+                    password 'xrf!!00'
+                }
+                url "https://nexus.xr-friends.com/repository/maven-releases/"
+            }
+        }
+    }
 
     dependencies {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.projectlombok:lombok'
 
-        implementation "com.example.common:common:1.0-RELEASE"
+        implementation "com.example.ecsp:common:0.0.1-RELEASE"
     }
 
     dependencyManagement {

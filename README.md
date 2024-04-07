@@ -1,7 +1,9 @@
 # 로컬 개발 환경
 
 * 참조
-  * Sample : https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders
+  * Sample
+    * https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders
+    * https://github.com/microservices-patterns/ftgo-application
   * CDC설정 : https://eventuate.io/docs/manual/eventuate-tram/latest/cdc-configuration.html
 
 ## Run

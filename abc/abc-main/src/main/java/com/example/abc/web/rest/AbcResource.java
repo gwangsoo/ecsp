@@ -2,11 +2,12 @@ package com.example.abc.web.rest;
 
 import com.example.abc.domain.dto.AbcDTO;
 import com.example.abc.domain.entity.Abc;
+import com.example.abc.exception.BadRequestAlertException;
 import com.example.abc.repository.AbcRepository;
 import com.example.abc.service.AbcService;
-import com.example.common.util.HeaderUtil;
-import com.example.common.util.PaginationUtil;
-import com.example.common.util.ResponseUtil;
+import com.example.ecsp.common.util.HeaderUtil;
+import com.example.ecsp.common.util.PaginationUtil;
+import com.example.ecsp.common.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -32,14 +33,13 @@ import java.util.Optional;
 /**
  * REST controller for managing {@link com.example.abc.domain.entity.Abc}.
  */
-@Tag(name = "2.7. 채팅방 공지사항")
+@Tag(name = "Abc Domain")
 @RestController
 @RequestMapping("/api/abcs")
 @Slf4j
 @RequiredArgsConstructor
 public class AbcResource {
 
-    private static final String PARENT_ENTITY_NAME = "chatRoom";
     private static final String ENTITY_NAME = "abc";
 
     @Value("${application.clientApp.name}")
@@ -57,9 +57,7 @@ public class AbcResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<AbcDTO> createAbc(
-            @PathVariable(value = "chatRoomId", required = true) final String chatRoomId,
-            @Valid @RequestBody AbcDTO abcDTO)
+    public ResponseEntity<AbcDTO> createAbc(@Valid @RequestBody AbcDTO abcDTO)
         throws URISyntaxException {
         log.debug("REST request to save Abc : {}", abcDTO);
 
@@ -142,14 +140,11 @@ public class AbcResource {
     /**
      * {@code DELETE  /abcs/:id} : delete the "id" abc.
      *
-     * @param chatRoomId the chatRoomId of the chatRoom to save.
      * @param id the id of the abcDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAbc(
-            @PathVariable(value = "chatRoomId", required = true) final String chatRoomId,
-            @PathVariable String id) {
+    public ResponseEntity<Void> deleteAbc(@PathVariable String id) {
         log.debug("REST request to delete Abc : {}", id);
 
         abcService.delete(id);

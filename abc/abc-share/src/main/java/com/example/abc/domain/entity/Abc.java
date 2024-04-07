@@ -1,6 +1,6 @@
 package com.example.abc.domain.entity;
 
-import com.example.common.jpa.AbstractAuditingEntity;
+import com.example.ecsp.common.jpa.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Comment;
 
 import java.io.Serializable;
 
@@ -22,26 +21,27 @@ import java.io.Serializable;
 public class Abc extends AbstractAuditingEntity<String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public enum AbcStatus {
+    public static enum AbcStatus {
         OPEN,
         CLOSE
     }
 
     @Id
     @Column(name = "id", length = 16, nullable = false)
-    @Comment("id")
+//    @Comment("id")
     private String id;
 
     @Column(name = "data", length = 256)
-    @Comment("데이타")
+//    @Comment("데이타")
     private String data;
 
     @Column(name = "size")
-    @Comment("사이즈")
+//    @Comment("사이즈")
     private Long size;
 
     @Column(name = "status", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
-    @Comment("상태 (OPEN/CLOSE)")
+//    @Comment("상태 (OPEN/CLOSE)")
+//    @ColumnDefault("OPEN")
     private AbcStatus status;
 }

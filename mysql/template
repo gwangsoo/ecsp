@@ -12,13 +12,13 @@ DROP Table IF Exists saga_lock_table;
 DROP Table IF Exists saga_stash_table;
 
 create table events (
-  event_id varchar(36) PRIMARY KEY,
-  event_type varchar(256),
-  event_data varchar(10000) NOT NULL,
-  entity_type varchar(256) NOT NULL,
-  entity_id varchar(36) NOT NULL,
-  triggering_event VARCHAR(1000),
-  metadata VARCHAR(1000),
+  event_id VARCHAR(255) PRIMARY KEY,
+  event_type LONGTEXT,
+  event_data LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  entity_type VARCHAR(255) NOT NULL,
+  entity_id VARCHAR(255) NOT NULL,
+  triggering_event LONGTEXT,
+  metadata LONGTEXT,
   published TINYINT DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -46,12 +46,13 @@ create table snapshots (
 
 
 CREATE TABLE message (
-  id VARCHAR(36) PRIMARY KEY,
-  destination VARCHAR(1000) NOT NULL,
-  headers VARCHAR(1000) NOT NULL,
-  payload varchar(10000) NOT NULL,
-  published SMALLINT DEFAULT 0,
-  creation_time BIGINT
+    id VARCHAR(255) PRIMARY KEY,
+    destination LONGTEXT NOT NULL,
+    headers LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    payload LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    published SMALLINT DEFAULT 0,
+    message_partition SMALLINT,
+    creation_time BIGINT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX message_published_idx ON message(published, id);
@@ -66,7 +67,7 @@ CREATE TABLE received_messages (
 
 CREATE TABLE offset_store(
   client_name VARCHAR(255) NOT NULL PRIMARY KEY,
-  serialized_offset VARCHAR(255)
+  serialized_offset LONGTEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

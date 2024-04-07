@@ -25,21 +25,21 @@ public class TramEventConsumer {
     public DomainEventHandlers domainEventHandlers() {
         return DomainEventHandlersBuilder
                 .forAggregateType(aggregateType)
-                .onEvent(XyzInsertEvent.class, this::handleBoardInserted)
-                .onEvent(XyzUpdateEvent.class, this::handleBoardUpdated)
-                .onEvent(XyzDeleteEvent.class, this::handleBoardDeleted)
+                .onEvent(XyzInsertEvent.class, this::handleXyzInserted)
+                .onEvent(XyzUpdateEvent.class, this::handleXyzUpdated)
+                .onEvent(XyzDeleteEvent.class, this::handleXyzDeleted)
                 .build();
     }
 
-    public void handleBoardInserted(DomainEventEnvelope<XyzInsertEvent> event) {
-        log.info("handleBoardInserted=" + event.getEvent().getXyz());
+    public void handleXyzInserted(DomainEventEnvelope<XyzInsertEvent> event) {
+        log.info("handleXyzInserted=" + event.getEvent().getXyz());
     }
 
-    public void handleBoardUpdated(DomainEventEnvelope<XyzUpdateEvent> event) {
-        log.info("handleBoardUpdated=" + event.getEvent().getXyz());
+    public void handleXyzUpdated(DomainEventEnvelope<XyzUpdateEvent> event) {
+        log.info("handleXyzUpdated=" + event.getEvent().getXyz());
     }
 
-    public void handleBoardDeleted(DomainEventEnvelope<XyzDeleteEvent> event) {
-        log.info("handleBoardDeleted=" + event.getEvent().getXyz());
+    public void handleXyzDeleted(DomainEventEnvelope<XyzDeleteEvent> event) {
+        log.info("handleXyzDeleted=" + event.getEvent().getXyz());
     }
 }

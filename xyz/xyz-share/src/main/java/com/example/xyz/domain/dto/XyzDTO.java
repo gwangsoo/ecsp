@@ -1,8 +1,7 @@
 package com.example.xyz.domain.dto;
 
-import com.example.common.jpa.AbstractAuditingDTO;
+import com.example.ecsp.common.jpa.AbstractAuditingDTO;
 import com.example.xyz.domain.entity.Xyz;
-import com.example.xyz.domain.entity.XyzDetail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

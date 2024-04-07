@@ -30,14 +30,19 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapiVersion}"
 
-//    implementation ('com.example.abc:abc-share:0.0.1-RELEASE')
-
     implementation project(':abc-share')
+
+    // Basic messaging
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-messaging:$eventuateTramVersion"
+    // Domain events
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-events:$eventuateTramVersion"
+    // Command/Async Reply messaging
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-commands:$eventuateTramVersion"
 
     implementation "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka:$eventuateTramVersion"
 //    implementation "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration:$eventuateTramVersion"
     implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
 //    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support:$eventuateTramSagasVersion"
 
-    implementation ('com.example.xyz:xyz-share:0.0.1-RELEASE')
+    implementation 'com.example.ecsp:xyz-share:0.0.1-RELEASE'
 }

@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  */
 public final class SecurityUtils {
 
-    public static final String CLAIMS_NAMESPACE = "https://careeasy.xr-friends.com/";
+    public static final String CLAIMS_NAMESPACE = "https://ecsp.example.com/";
 
     private SecurityUtils() {}
 
