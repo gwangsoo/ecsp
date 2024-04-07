@@ -1,6 +1,8 @@
 package com.example.xyz.domain.dto;
 
 import com.example.ecsp.common.jpa.AbstractAuditingDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
@@ -29,7 +31,10 @@ public class XyzDetailDTO extends AbstractAuditingDTO<String> implements Seriali
     @Schema(description = "속성값")
     private String attrValue;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "XYZ")
+    @JsonIgnoreProperties(
+            value = { "xyzDetails", "name", "age", "status" },
+            allowSetters = true
+    )
     private XyzDTO xyz;
 }
