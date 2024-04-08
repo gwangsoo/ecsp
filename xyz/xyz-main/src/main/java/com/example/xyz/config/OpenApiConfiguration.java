@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "ABC Service APIs",
-                description = "XR-Friends ABC Service API",
+                title = "XYZ Service APIs",
+                description = "XR-Friends XYZ Service API",
                 version = "v1"
         )
 //        servers = {@Server(url = "/services/backend/", description = "Default Server URL")}

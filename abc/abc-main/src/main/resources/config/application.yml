@@ -132,9 +132,15 @@ spring:
 #      max-request-size: 256MB
 #      strict-servlet-compliance: true
 
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://kubernetes.docker.internal:9411/
+
 application:
   clientApp:
-    name: 'backend'
+    name: 'abc'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "http://localhost:8100,http://localhost:9000"
@@ -144,7 +150,7 @@ application:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: backend@localhost
+    from: abc@localhost
   security:
     oauth2:
       audience:
