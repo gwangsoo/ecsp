@@ -1,4 +1,4 @@
-package com.example.xyz.repository;
+package com.example.ecsp.common.jpa;
 
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Subquery;

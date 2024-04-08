@@ -1,6 +1,7 @@
 package com.example.abc.repository;
 
 import com.example.abc.domain.entity.Abc;
+import com.example.ecsp.common.jpa.AbstractSpecification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -1,5 +1,6 @@
 package com.example.xyz.repository;
 
+import com.example.ecsp.common.jpa.AbstractSpecification;
 import com.example.xyz.domain.entity.XyzDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

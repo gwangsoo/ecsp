@@ -14,8 +14,10 @@ import io.eventuate.tram.events.common.DomainEvent;
 import io.eventuate.tram.events.publisher.DomainEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,15 +96,17 @@ public class XyzServiceImpl implements XyzService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<XyzDTO> findAll(Xyz.XyzStatus xyzStatus, Pageable pageable) {
+    public Page<XyzDTO> findAll(String attrValue, Xyz.XyzStatus xyzStatus, Pageable pageable) {
         log.debug("Request to get all Xyzs");
 
-//        Long length1 = xyzRepository.getLength();
-//        Page<Long> length2 = xyzRepository.getLength(pageable);
-//        Long length3 = xyzRepository.getLength(XyzRepository.Spec.equalChatRoom(chatRoomId));
+        Specification<Xyz> spec = XyzRepository.Spec.instance().equal("status", xyzStatus);
+
+        if(StringUtils.isNotEmpty(attrValue)) {
+            spec = spec.and(XyzRepository.Spec.instance().equal("xyzDetails", "attrValue", attrValue));
+        }
 
         return xyzRepository
-                .findAll(XyzRepository.Spec.instance().equal("status", xyzStatus), pageable)
+                .findAll(spec, pageable)
                 .map(xyzMapper::toDto);
     }
 

@@ -112,12 +112,13 @@ public class XyzResource {
      */
     @GetMapping("")
     public ResponseEntity<List<XyzDTO>> getAllXyzs(
+            @RequestParam(value = "attrValue") final String attrValue,
             @RequestParam(value = "status") final Xyz.XyzStatus status,
             @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)
             Pageable pageable) {
         log.debug("REST request to get all Xyzs");
 
-        final Page<XyzDTO> page = xyzService.findAll(status, pageable);
+        final Page<XyzDTO> page = xyzService.findAll(attrValue, status, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
