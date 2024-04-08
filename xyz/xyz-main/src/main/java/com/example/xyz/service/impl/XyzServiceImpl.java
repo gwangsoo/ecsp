@@ -47,9 +47,9 @@ public class XyzServiceImpl implements XyzService {
         xyz = xyzRepository.save(xyz);
         XyzDTO result = xyzMapper.toDto(xyz);
 
-        log.debug("xyz = {}", xyz);
-        log.debug("xyz.toJson1 = {}", JsonUtil.toJson(xyz));
-        log.debug("xyz.toJson2 = {}", JSonMapper.toJson(xyz));
+//        log.debug("xyz = {}", xyz);
+//        log.debug("xyz.toJson1 = {}", JsonUtil.toJson(xyz));
+//        log.debug("xyz.toJson2 = {}", JSonMapper.toJson(xyz));
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new XyzInsertEvent(xyz);

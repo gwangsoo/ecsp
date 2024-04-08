@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @EnableAutoConfiguration
 @Import({TramJdbcKafkaConfiguration.class,
-        //NoopDuplicateMessageDetector.class, // received_messages
+        //NoopDuplicateMessageDetector.class, // received_messages,
+        //TramSpringCloudSleuthIntegrationCommonConfiguration.class, // version 호환안됨
         TramEventsPublisherConfiguration.class,
         TramEventSubscriberConfiguration.class,
         TramCommandProducerConfiguration.class,

@@ -12,11 +12,15 @@
 docker-compose up -d
 ````
 
-| 구분       | endpoint               | id / pw                                     | 기타 |
-|----------|------------------------|---------------------------------------------|----|
-| kafka ui | http://localhost:3030/ |                                             |    |
-| mysql    | localhost:3306         | mysqluser / mysqlpw<br/>root / rootpassword |    |
-| mongodb  | localhost:27017        | root / example |    |
+| 구분           | endpoint                                                   | id / pw                                     | 기타              |
+|--------------|------------------------------------------------------------|---------------------------------------------|-----------------|
+| kafka ui     | http://localhost:3030/                                     |                                             |                 |
+| mysql        | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                 |
+| mongodb      | localhost:27017                                            | root / example |                 |
+| Zipkin       | http://localhost:9411/zipkin/                              |  | service tracing |
+| AbcService   | http://localhost:8082/services/abc/swagger-ui/index.html   |  |                 |
+| XyzService   | http://localhost:8083/services/xyz/swagger-ui/index.html   |  |                 |
+| OrderService | http://localhost:8084/services/order/swagger-ui/index.html |  |                 |
 
 ## Back-end
 
@@ -63,5 +67,6 @@ docker-compose up -d
 * spring security 권한 샘플
 * resilience4j 샘플
 * 몽고DB 연계 샘플
-* zipkin / sleuth
+~~* zipkin / sleuth~~
+  * io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-common:0.4.0.RELEASE 버전이 맞지않아 적용되지 않으나, 향후 적용 예정.
 * kafka-connect

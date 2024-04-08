@@ -40,13 +40,14 @@ dependencies {
     implementation "io.eventuate.tram.core:eventuate-tram-spring-commands:$eventuateTramVersion"
 
     implementation "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka:$eventuateTramVersion"
-//    implementation "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration:$eventuateTramVersion"
     implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
 //    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support:$eventuateTramSagasVersion"
-//    runtimeOnly 'io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-common:0.4.0.RELEASE'
 
-//    implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
-//    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+//    implementation "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration:0.29.0.RELEASE"
+//    implementation 'io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-common:0.4.0.RELEASE'
+
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 
     implementation 'com.example.ecsp:xyz-share:0.0.1-RELEASE'
 }

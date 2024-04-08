@@ -54,3 +54,18 @@ management:
         request:
           autotime:
             enabled: true
+
+  tracing:
+    sampling:
+      probability: 1.0
+#    propagation:
+#      consume: b3
+#      produce: b3_multi
+  zipkin:
+    tracing:
+      endpoint: "http://kubernetes.docker.internal:9411/api/v2/spans"
+
+spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false

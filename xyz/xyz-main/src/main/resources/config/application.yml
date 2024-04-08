@@ -132,12 +132,6 @@ spring:
 #      max-request-size: 256MB
 #      strict-servlet-compliance: true
 
-  sleuth:
-    sampler:
-      probability: 1.0
-  zipkin:
-    base-url: http://kubernetes.docker.internal:9411/
-
 application:
   clientApp:
     name: 'xyz'
