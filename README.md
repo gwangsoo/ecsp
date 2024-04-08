@@ -56,3 +56,12 @@ docker-compose up -d
     * web
       * rest
       * websocket
+
+## TODO
+
+* eventaute saga 패턴 샘플
+* spring security 권한 샘플
+* resilience4j 샘플
+* 몽고DB 연계 샘플
+* zipkin / sleuth
+* kafka-connect
