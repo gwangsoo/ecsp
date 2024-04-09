@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-for schema in abc xyz;
+for schema in abc xyz orders auth;
 do
   user=${schema}_user
   password=${schema}_password

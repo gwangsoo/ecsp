@@ -1,0 +1,5 @@
+rootProject.name = 'orders'
+
+include 'orders-main'
+include 'orders-share'
+

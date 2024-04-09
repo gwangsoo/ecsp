@@ -5,22 +5,49 @@
     * https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders
     * https://github.com/microservices-patterns/ftgo-application
   * CDC설정 : https://eventuate.io/docs/manual/eventuate-tram/latest/cdc-configuration.html
+  * Schema
+    * mysql
+      * common : https://github.com/eventuate-foundation/eventuate-common/tree/master/mysql
+      * saga : https://github.com/eventuate-tram/eventuate-tram-sagas/mysql
 
 ## Run
 
-````
-docker-compose up -d
-````
+* 실행중인 docker-compose container 를 내리고 삭제한다.
+  ````
+  docker-compose down -v
+  ````
+* 형상이 변경된 image가 있을 경우 다시 빌드한다.
+  ````
+  docker-compose build
+  ````
+* docker-compose 를 실행한다.
+  ````
+  docker-compose up -d
+  ````
+* docker-compose 를 실행한다.
+  ````
+  docker-compose up -d
+  ````
+* docker-compose 실행여부를 확인한다.
+  ````
+  docker-compose ps -a
+  docker-compose stats
+  ````
+* docker-compose 로그를 확인한다.
+  ````
+  docker-compose logs -f
+  docker-compose logs -f <서비스명>
+  ````
 
-| 구분           | endpoint                                                   | id / pw                                     | 기타              |
-|--------------|------------------------------------------------------------|---------------------------------------------|-----------------|
-| kafka ui     | http://localhost:3030/                                     |                                             |                 |
-| mysql        | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                 |
-| mongodb      | localhost:27017                                            | root / example |                 |
-| Zipkin       | http://localhost:9411/zipkin/                              |  | service tracing |
-| AbcService   | http://localhost:8082/services/abc/swagger-ui/index.html   |  |                 |
-| XyzService   | http://localhost:8083/services/xyz/swagger-ui/index.html   |  |                 |
-| OrderService | http://localhost:8084/services/order/swagger-ui/index.html |  |                 |
+| 구분           | endpoint                                                   | id / pw                                     | 기타                                                                                    |
+|--------------|------------------------------------------------------------|---------------------------------------------|---------------------------------------------------------------------------------------|
+| kafka ui     | http://localhost:3030/                                     |                                             |                                                                                       |
+| mysql        | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                                                                                       |
+| mongodb      | localhost:27017                                            | root / example |                                                                                       |
+| Zipkin       | http://localhost:9411/zipkin/                              |  | service tracing                                                                       |
+| AbcService   | http://localhost:8082/services/abc/swagger-ui/index.html   |  | post method가 호출되면 Abc 등록 후 Xyz도 등록 Command를 호출한다.                                     |
+| XyzService   | http://localhost:8083/services/xyz/swagger-ui/index.html   |  |                                                                                       |
+| OrderService | http://localhost:8084/services/order/swagger-ui/index.html |  | post method가 호출되면 order를 등록 후 SAGA패턴을 사용하여 Abc,Xyz 서비스를 호출하여 등록하고 완료시 order 상태를 변경한다. |
 
 ## Back-end
 
@@ -93,7 +120,7 @@ docker-compose up -d
 
 ### TODO
 
-* eventaute saga 패턴 샘플
+~~* eventaute saga 패턴 샘플~~
 * spring security 권한 샘플
 * resilience4j 샘플
 * 몽고DB 연계 샘플
