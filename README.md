@@ -37,7 +37,7 @@ docker-compose up -d
 * mapstruct : 1.5.5.Final
 * springdoc-openapi-webmvc : 2.2.0
 
-## Back-end 프로젝트 구조 및 패키지경로
+### Back-end 프로젝트 구조 및 패키지경로
 
 * xxxxx Project : com.hae.ecsp.xxxxx
   * sub projtect : xxxxx-share
@@ -61,7 +61,37 @@ docker-compose up -d
       * rest
       * websocket
 
-## TODO
+### Build
+
+* common
+  * common build
+    ````
+    ./gradlew jar
+    ````
+  * common publishing
+    ````
+    ./gradlew publishToMavenLocal
+    ````
+* share module build
+  * build
+    ````
+    ./gradlew jar
+    ````
+  * publishing
+    ````
+    ./gradlew publishToMavenLocal
+    ````
+* main module build
+  * build
+    ````
+    ./gradlew bootJar
+    ````
+  * run
+    ````
+    ./gradlew bootRun
+    ````
+
+### TODO
 
 * eventaute saga 패턴 샘플
 * spring security 권한 샘플
