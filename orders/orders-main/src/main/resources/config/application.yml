@@ -185,7 +185,9 @@ resilience4j.circuitbreaker:
   instances:
     keycloakClient:
       baseConfig: default
-    ecoPlatformClient:
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
       baseConfig: default
 
 resilience4j.retry:
@@ -202,7 +204,9 @@ resilience4j.retry:
   instances:
     keycloakClient:
       baseConfig: default
-    ecoPlatformClient:
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
       baseConfig: default
 
 resilience4j.bulkhead:
@@ -212,7 +216,9 @@ resilience4j.bulkhead:
   instances:
     keycloakClient:
       baseConfig: default
-    ecoPlatformClient:
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
       baseConfig: default
 
 resilience4j.thread-pool-bulkhead:
@@ -224,7 +230,9 @@ resilience4j.thread-pool-bulkhead:
   instances:
     keycloakClient:
       baseConfig: default
-    ecoPlatformClient:
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
       baseConfig: default
 
 resilience4j.ratelimiter:
@@ -238,7 +246,9 @@ resilience4j.ratelimiter:
   instances:
     keycloakClient:
       baseConfig: default
-    ecoPlatformClient:
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
       baseConfig: default
 
 resilience4j.timelimiter:
@@ -249,17 +259,25 @@ resilience4j.timelimiter:
   instances:
     keycloakClient:
       baseConfig: default
-    ecoPlatformClient:
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
       baseConfig: default
 
 client:
-  keycloak:
-    name: keycloakClient
-    uri: https://auth.xr-friends.com/auth
-    realm: careeasy
-    #    token: MIICrTCCAZUCBgGJQ9UBzTANBgkqhkiG9w0BAQsFADAaMRgwFgYDVQQDDA91c2VyX21hbmFnZW1lbnQwHhcNMjMwNzExMDcyMTIwWhcNMzMwNzExMDcyMzAwWjAaMRgwFgYDVQQDDA91c2VyX21hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCuA7bzpx5fzaZ+WBFFMMsgOXObLgYq6L9HjSWgR5hQLioUzn6VYpe/nLxd1ol6WFnPjTLukK9VpxDeCoWFA08qvTfip8GrJ5o4zDcK9s4xSzDrqXSsXJ9V6L++rZ9B5+1Nus/fOULGkgZIoLJrOPKoI6RSca2DUw3VzkbR4DtnbfJINHtfYjtImwIifBhTe4VUhNBuM4rHjfGVWIzK2XBeoHmoftOCnV1blEB5F9kGSt6F6DmDWXFQzzMasEa7iYQK3Qex7X6eytp1AtUItnGWxHeXR/4mcliwbxEV2PgTVMTIrrVrB/FFfhxp1xatQMV5VEogbd51RJQsB8AhZsBzAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAKKSQJAixRrLEscrD+ABTh94kuTmHaBgcupDqTcefrD31iR7C/jSAFk3V04xghIAX8p76J1ASLW9vwbq0Az1KJs4umjklOOhuEiC4EXeMEYPD1XBCLnf122imYXspfZa2ZL4NsuX1fbaDbnjs8U7HAHaSzfYnS/kPS/DrTLY/w4eFAtepQbmL5CuuPz9XNRcnx/rWgciaoibbIsG0gJl6T/bea5Ccb/ICqjap/gugZgdYthDBndLqhFJsNObxbUlm1Cy1HzFTa4BN3ScRmoczauWP4UlHMvuXPC+XsMWDZWU5U0TL4oRTejD41BamMmrAC6xE58ZoBvjsryQwvzJ75k=
-    grantType: client_credentials
-    clientId: internal
-    clientSecret: BvAwO60Mjoqqf1FFnrCol4t6QzpchcF9
+  abcService:
+    name: abcServiceClient
+    uri: http://localhost:8082
+  xyzService:
+    name: xyzServiceClient
+    uri: http://localhost:8083
+#  keycloak:
+#    name: keycloakClient
+#    uri: https://auth.xr-friends.com/auth
+#    realm: careeasy
+#    #    token: MIICrTCCAZUCBgGJQ9UBzTANBgkqhkiG9w0BAQsFADAaMRgwFgYDVQQDDA91c2VyX21hbmFnZW1lbnQwHhcNMjMwNzExMDcyMTIwWhcNMzMwNzExMDcyMzAwWjAaMRgwFgYDVQQDDA91c2VyX21hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCuA7bzpx5fzaZ+WBFFMMsgOXObLgYq6L9HjSWgR5hQLioUzn6VYpe/nLxd1ol6WFnPjTLukK9VpxDeCoWFA08qvTfip8GrJ5o4zDcK9s4xSzDrqXSsXJ9V6L++rZ9B5+1Nus/fOULGkgZIoLJrOPKoI6RSca2DUw3VzkbR4DtnbfJINHtfYjtImwIifBhTe4VUhNBuM4rHjfGVWIzK2XBeoHmoftOCnV1blEB5F9kGSt6F6DmDWXFQzzMasEa7iYQK3Qex7X6eytp1AtUItnGWxHeXR/4mcliwbxEV2PgTVMTIrrVrB/FFfhxp1xatQMV5VEogbd51RJQsB8AhZsBzAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAKKSQJAixRrLEscrD+ABTh94kuTmHaBgcupDqTcefrD31iR7C/jSAFk3V04xghIAX8p76J1ASLW9vwbq0Az1KJs4umjklOOhuEiC4EXeMEYPD1XBCLnf122imYXspfZa2ZL4NsuX1fbaDbnjs8U7HAHaSzfYnS/kPS/DrTLY/w4eFAtepQbmL5CuuPz9XNRcnx/rWgciaoibbIsG0gJl6T/bea5Ccb/ICqjap/gugZgdYthDBndLqhFJsNObxbUlm1Cy1HzFTa4BN3ScRmoczauWP4UlHMvuXPC+XsMWDZWU5U0TL4oRTejD41BamMmrAC6xE58ZoBvjsryQwvzJ75k=
+#    grantType: client_credentials
+#    clientId: internal
+#    clientSecret: BvAwO60Mjoqqf1FFnrCol4t6QzpchcF9
 #    username: backend
 #    password: 2Oh9wojomElCrc
