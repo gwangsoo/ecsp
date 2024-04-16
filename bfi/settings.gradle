@@ -1,0 +1,4 @@
+rootProject.name = 'bfi'
+
+include 'bfi-main'
+include 'bfi-share'
