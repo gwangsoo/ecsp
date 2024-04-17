@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class AbcDTO extends AbstractAuditingDTO<String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Size(max = 16)
     private String id;
 
