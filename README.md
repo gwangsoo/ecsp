@@ -49,6 +49,7 @@
 | AbcService    | http://localhost:8082/services/abc/swagger-ui/index.html   |                                             | post method가 호출되면 Abc 등록 후 Xyz도 등록 Command를 호출한다.                                     |
 | XyzService    | http://localhost:8083/services/xyz/swagger-ui/index.html   |                                             |                                                                                       |
 | OrderService  | http://localhost:8084/services/order/swagger-ui/index.html |                                             | post method가 호출되면 order를 등록 후 SAGA패턴을 사용하여 Abc,Xyz 서비스를 호출하여 등록하고 완료시 order 상태를 변경한다. |
+| BfiService    | http://localhost:8085/services/bfi/swagger-ui/index.html   |                                             |                                                                                       |
 
 ## Back-end
 
