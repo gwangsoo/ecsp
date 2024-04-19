@@ -39,15 +39,16 @@
   docker-compose logs -f <서비스명>
   ````
 
-| 구분           | endpoint                                                   | id / pw                                     | 기타                                                                                    |
-|--------------|------------------------------------------------------------|---------------------------------------------|---------------------------------------------------------------------------------------|
-| kafka ui     | http://localhost:3030/                                     |                                             |                                                                                       |
-| mysql        | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                                                                                       |
-| mongodb      | localhost:27017                                            | root / example |                                                                                       |
-| Zipkin       | http://localhost:9411/zipkin/                              |  | service tracing                                                                       |
-| AbcService   | http://localhost:8082/services/abc/swagger-ui/index.html   |  | post method가 호출되면 Abc 등록 후 Xyz도 등록 Command를 호출한다.                                     |
-| XyzService   | http://localhost:8083/services/xyz/swagger-ui/index.html   |  |                                                                                       |
-| OrderService | http://localhost:8084/services/order/swagger-ui/index.html |  | post method가 호출되면 order를 등록 후 SAGA패턴을 사용하여 Abc,Xyz 서비스를 호출하여 등록하고 완료시 order 상태를 변경한다. |
+| 구분            | endpoint                                                   | id / pw                                     | 기타                                                                                    |
+|---------------|------------------------------------------------------------|---------------------------------------------|---------------------------------------------------------------------------------------|
+| kafka ui      | http://localhost:3030/                                     |                                             |                                                                                       |
+| mysql         | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                                                                                       |
+| mongodb       | localhost:27017                                            | root / example                              |                                                                                       |
+| mongo express | http://localhost:8088/db/bfi/                              | admin / pass                                |                                                                                       |
+| Zipkin        | http://localhost:9411/zipkin/                              |                                             | service tracing                                                                       |
+| AbcService    | http://localhost:8082/services/abc/swagger-ui/index.html   |                                             | post method가 호출되면 Abc 등록 후 Xyz도 등록 Command를 호출한다.                                     |
+| XyzService    | http://localhost:8083/services/xyz/swagger-ui/index.html   |                                             |                                                                                       |
+| OrderService  | http://localhost:8084/services/order/swagger-ui/index.html |                                             | post method가 호출되면 order를 등록 후 SAGA패턴을 사용하여 Abc,Xyz 서비스를 호출하여 등록하고 완료시 order 상태를 변경한다. |
 
 ## Back-end
 
