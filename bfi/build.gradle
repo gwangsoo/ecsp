@@ -72,6 +72,8 @@ subprojects {
         testImplementation 'org.projectlombok:lombok'
 
         implementation "com.example.ecsp:common:0.0.1-RELEASE"
+
+        implementation 'com.google.code.findbugs:jsr305:3.0.2'
     }
 
     dependencyManagement {

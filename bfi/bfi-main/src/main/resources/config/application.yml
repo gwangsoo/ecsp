@@ -1,0 +1,279 @@
+server:
+  port: ${PORT:8085}
+  shutdown: graceful
+  servlet:
+    context-path: /services/bfi
+    session:
+      cookie:
+        secure: true
+        http-only: true
+
+logging:
+  level:
+    ROOT: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.example.bfi: DEBUG
+    io.eventuate.tram: DEBUG
+
+eventuate:
+  database:
+    schema: bfi
+
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+  zookeeper:
+    connection:
+      string: localhost:2181
+
+spring:
+  application:
+    name: bfi
+  profiles:
+    include: springdoc, management
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
+
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+  jmx:
+    enabled: false
+
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/bfi?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+#    username: bfi_user
+#    password: bfi_password
+#
+#    hikari:
+#      poolName: Hikari
+#      auto-commit: false
+
+#  datasource:
+#    url: mongodb://localhost:27017/
+#    username: root
+#    password: example
+
+  data:
+    mongodb:
+#      uri: mongodb://localhost:27017/bfi
+      username: root
+      password: example
+      authentication-database: admin
+      database: bfi
+      port: 27017
+      host: localhost
+
+#    jpa:
+#      repositories:
+#        bootstrap-mode: deferred
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQLDialect
+#    show-sql: false
+#    generate-ddl: true
+#    database: mysql
+#    open-in-view: false
+#    properties:
+#      hibernate.jdbc.time_zone: UTC
+#      hibernate.timezone.default_storage: NORMALIZE
+#      hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
+#      hibernate.id.new_generator_mappings: true
+#      hibernate.connection.provider_disables_autocommit: true
+#      hibernate.cache.use_second_level_cache: false
+#      hibernate.cache.use_query_cache: false
+#      hibernate.generate_statistics: false
+#      # modify batch size as necessary
+#      hibernate.jdbc.batch_size: 25
+#      hibernate.order_inserts: true
+#      hibernate.order_updates: true
+#      hibernate.query.fail_on_pagination_over_collection_fetch: true
+#      hibernate.query.in_clause_parameter_padding: true
+#      hibernate.format_sql: false
+#      hibernate.use_sql_comments: true
+#    hibernate:
+#      ddl-auto: update
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+#        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+
+  messages:
+    basename: i18n/messages
+
+  main:
+    allow-bean-definition-overriding: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    problemdetails:
+      enabled: true
+
+  task:
+    execution:
+      thread-name-prefix: care-easy-task-
+      pool:
+        core-size: 1
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: bfi-scheduling-
+      pool:
+        size: 2
+
+  output:
+    ansi:
+      console-available: true
+
+#  security:
+#    oauth2:
+#      client:
+#        provider:
+#          oidc:
+#            issuer-uri: https://auth.xr-friends.com/auth/realms/careeasy
+#        registration:
+#          oidc:
+#            client-id: app
+#            client-secret: app
+#            scope: openid, profile, email, offline_access # last one for refresh tokens
+
+#  servlet:
+#    multipart:
+#      enabled: true
+#      location: ${files.upload.path}
+#      max-file-size: 256MB
+#      max-request-size: 256MB
+#      strict-servlet-compliance: true
+
+application:
+  clientApp:
+    name: 'bfi'
+  # By default CORS is disabled. Uncomment to enable.
+  # cors:
+  #   allowed-origins: "http://localhost:8100,http://localhost:9000"
+  #   allowed-methods: "*"
+  #   allowed-headers: "*"
+  #   exposed-headers: "Authorization,Link,X-Total-Count,X-${application.clientApp.name}-alert,X-${application.clientApp.name}-error,X-${application.clientApp.name}-params"
+  #   allow-credentials: true
+  #   max-age: 1800
+  mail:
+    from: bfi@localhost
+  security:
+    oauth2:
+      audience:
+        - app
+      issuers:
+        - https://auth.xr-friends.com/auth/realms/careeasy
+
+# Properties to be exposed on the /info management endpoint
+info:
+  # Comma separated list of profiles that will trigger the ribbon to show
+  version: 'dev'
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.bfi.exception.BadRequestAlertException
+    shared:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 30
+      waitDurationInOpenState: 1s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      ignoreExceptions:
+        - com.example.bfi.exception.BadRequestAlertException
+  instances:
+    keycloakClient:
+      baseConfig: default
+    ecoPlatformClient:
+      baseConfig: default
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 100
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.bfi.exception.BadRequestAlertException
+  instances:
+    keycloakClient:
+      baseConfig: default
+    ecoPlatformClient:
+      baseConfig: default
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 100
+  instances:
+    keycloakClient:
+      baseConfig: default
+    ecoPlatformClient:
+      baseConfig: default
+
+resilience4j.thread-pool-bulkhead:
+  configs:
+    default:
+      maxThreadPoolSize: 4
+      coreThreadPoolSize: 2
+      queueCapacity: 2
+  instances:
+    keycloakClient:
+      baseConfig: default
+    ecoPlatformClient:
+      baseConfig: default
+
+resilience4j.ratelimiter:
+  configs:
+    default:
+      registerHealthIndicator: false
+      limitForPeriod: 10
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0
+      eventConsumerBufferSize: 100
+  instances:
+    keycloakClient:
+      baseConfig: default
+    ecoPlatformClient:
+      baseConfig: default
+
+resilience4j.timelimiter:
+  configs:
+    default:
+      cancelRunningFuture: false
+      timeoutDuration: 2s
+  instances:
+    keycloakClient:
+      baseConfig: default
+    ecoPlatformClient:
+      baseConfig: default
+
+client:
+  keycloak:
+    name: keycloakClient
+    uri: https://auth.xr-friends.com/auth
+    realm: careeasy
+    #    token: MIICrTCCAZUCBgGJQ9UBzTANBgkqhkiG9w0BAQsFADAaMRgwFgYDVQQDDA91c2VyX21hbmFnZW1lbnQwHhcNMjMwNzExMDcyMTIwWhcNMzMwNzExMDcyMzAwWjAaMRgwFgYDVQQDDA91c2VyX21hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCuA7bzpx5fzaZ+WBFFMMsgOXObLgYq6L9HjSWgR5hQLioUzn6VYpe/nLxd1ol6WFnPjTLukK9VpxDeCoWFA08qvTfip8GrJ5o4zDcK9s4xSzDrqXSsXJ9V6L++rZ9B5+1Nus/fOULGkgZIoLJrOPKoI6RSca2DUw3VzkbR4DtnbfJINHtfYjtImwIifBhTe4VUhNBuM4rHjfGVWIzK2XBeoHmoftOCnV1blEB5F9kGSt6F6DmDWXFQzzMasEa7iYQK3Qex7X6eytp1AtUItnGWxHeXR/4mcliwbxEV2PgTVMTIrrVrB/FFfhxp1xatQMV5VEogbd51RJQsB8AhZsBzAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAKKSQJAixRrLEscrD+ABTh94kuTmHaBgcupDqTcefrD31iR7C/jSAFk3V04xghIAX8p76J1ASLW9vwbq0Az1KJs4umjklOOhuEiC4EXeMEYPD1XBCLnf122imYXspfZa2ZL4NsuX1fbaDbnjs8U7HAHaSzfYnS/kPS/DrTLY/w4eFAtepQbmL5CuuPz9XNRcnx/rWgciaoibbIsG0gJl6T/bea5Ccb/ICqjap/gugZgdYthDBndLqhFJsNObxbUlm1Cy1HzFTa4BN3ScRmoczauWP4UlHMvuXPC+XsMWDZWU5U0TL4oRTejD41BamMmrAC6xE58ZoBvjsryQwvzJ75k=
+    grantType: client_credentials
+    clientId: internal
+    clientSecret: BvAwO60Mjoqqf1FFnrCol4t6QzpchcF9
+#    username: backend
+#    password: 2Oh9wojomElCrc
