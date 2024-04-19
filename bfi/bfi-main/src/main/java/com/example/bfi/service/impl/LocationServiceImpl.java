@@ -92,8 +92,8 @@ public class LocationServiceImpl implements LocationService {
 //        Example<Location> example = Example.of(Location.builder().lastUpdated(ZonedDateTime.now()).build());
 //
 //        Pageable pageable = Pageable.unpaged();
-
-        return locationRepository.findAll().stream().map(locationMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+//        return locationRepository.findAll().stream().map(locationMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        return locationRepository.findAllByLastUpdated(dateFrom, dateTo, offset, limit).stream().map(locationMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
