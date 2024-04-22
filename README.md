@@ -381,6 +381,20 @@ public class Sample {
 }
 ````
 
+### BFI
+
+BFI (Backend For Interface) 는 MongoDB를 사용합니다.
+
+docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
+
+#### MongoDB
+
+* Database 생성 후 권한 설정 (콘솔사용)
+  ````
+  use bfi;
+  
+  db.createUser({user:'root',pwd:'example',roles:['dbOwner']});
+  ````
 
 ### TODO
 
