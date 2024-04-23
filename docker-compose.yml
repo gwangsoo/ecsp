@@ -76,6 +76,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: bfi
     volumes:
+      # mongo-init.js 참고 :
+      # 1. https://www.mongodb.com/community/forums/t/credentials-with-docker-compose/255648
+      # 2. https://stackoverflow.com/questions/71194481/unable-to-run-a-script-inside-docker-compose
       - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
 
   mongo-express:
