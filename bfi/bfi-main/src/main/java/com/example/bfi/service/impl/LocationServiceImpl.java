@@ -65,7 +65,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<LocationDTO> findAll(ZonedDateTime dateFrom, ZonedDateTime dateTo, Integer offset, Integer limit) {
+    public List<LocationDTO> findAll(String countryCode, String partyId, ZonedDateTime dateFrom, ZonedDateTime dateTo, Integer offset, Integer limit) {
         log.debug("Request to get all Locations");
 
 //        Criteria where = null;
@@ -93,7 +93,7 @@ public class LocationServiceImpl implements LocationService {
 //
 //        Pageable pageable = Pageable.unpaged();
 //        return locationRepository.findAll().stream().map(locationMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
-        return locationRepository.findAllByLastUpdated(dateFrom, dateTo, offset, limit).stream().map(locationMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        return locationRepository.findAllByLastUpdated(countryCode, partyId, dateFrom, dateTo, offset, limit).stream().map(locationMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override

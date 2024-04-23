@@ -40,7 +40,7 @@ public interface LocationService {
      *
      * @return the list of entities.
      */
-    List<LocationDTO> findAll(ZonedDateTime dateFrom, ZonedDateTime dateTo, Integer offset, Integer limit);
+    List<LocationDTO> findAll(String countryCode, String partyId, ZonedDateTime dateFrom, ZonedDateTime dateTo, Integer offset, Integer limit);
 
     /**
      * Get the "id" location.

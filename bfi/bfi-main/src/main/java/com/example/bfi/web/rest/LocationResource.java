@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,31 +45,31 @@ public class LocationResource {
 
     private final LocationRepository locationRepository;
 
-//    /**
-//     * {@code POST  /locations} : Create a new location.
-//     *
-//     * @param locationDTO the locationDTO to create.
-//     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new locationDTO, or with status {@code 400 (Bad Request)} if the location has already an ID.
-//     * @throws URISyntaxException if the Location URI syntax is incorrect.
-//     */
-//    @PostMapping("")
-//    public ResponseEntity<LocationDTO> createLocation(@Valid @RequestBody LocationDTO locationDTO) throws URISyntaxException {
-//        log.debug("REST request to save Location : {}", locationDTO);
-////        if (locationDTO.getId() != null) {
-////            throw new BadRequestAlertException("A new location cannot already have an ID", ENTITY_NAME, "idexists");
-////        }
-//        locationDTO = locationService.save(locationDTO);
-//        return ResponseEntity.created(new URI("/api/locations/" + locationDTO.getId()))
-//            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, locationDTO.getId()))
-//            .body(locationDTO);
-//    }
+    /**
+     * {@code POST  /locations} : Create a new location.
+     *
+     * @param locationDTO the locationDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new locationDTO, or with status {@code 400 (Bad Request)} if the location has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("")
+    public ResponseEntity<LocationDTO> createLocation(@Valid @RequestBody LocationDTO locationDTO) throws URISyntaxException {
+        log.debug("REST request to save Location : {}", locationDTO);
+//        if (locationDTO.getId() != null) {
+//            throw new BadRequestAlertException("A new location cannot already have an ID", ENTITY_NAME, "idexists");
+//        }
+        locationDTO = locationService.save(locationDTO);
+        return ResponseEntity.created(new URI("/api/locations/" + locationDTO.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, locationDTO.getId()))
+                .body(locationDTO);
+    }
 
     /**
      * {@code PUT  /locations/:id} : Updates an existing location.
      *
      * @param countryCode the id of the locationDTO to save.
-     * @param partyId the id of the locationDTO to save.
-     * @param locationId the id of the locationDTO to save.
+     * @param partyId     the id of the locationDTO to save.
+     * @param locationId  the id of the locationDTO to save.
      * @param locationDTO the locationDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated locationDTO,
      * or with status {@code 400 (Bad Request)} if the locationDTO is not valid,
@@ -100,16 +99,16 @@ public class LocationResource {
 
         locationDTO = locationService.update(locationDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, locationDTO.getId()))
-            .body(locationDTO);
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, locationDTO.getId()))
+                .body(locationDTO);
     }
 
     /**
      * {@code PATCH  /locations/:id} : Partial updates given fields of an existing location, field will ignore if it is null
      *
      * @param countryCode the id of the locationDTO to save.
-     * @param partyId the id of the locationDTO to save.
-     * @param locationId the id of the locationDTO to save.
+     * @param partyId     the id of the locationDTO to save.
+     * @param locationId  the id of the locationDTO to save.
      * @param locationDTO the locationDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated locationDTO,
      * or with status {@code 400 (Bad Request)} if the locationDTO is not valid,
@@ -117,12 +116,12 @@ public class LocationResource {
      * or with status {@code 500 (Internal Server Error)} if the locationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{location_id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/{location_id}", consumes = {"application/json", "application/merge-patch+json"})
     public ResponseEntity<LocationDTO> partialUpdateLocation(
-        @PathVariable(value = "country_code", required = true) final String countryCode,
-        @PathVariable(value = "party_id", required = true) final String partyId,
-        @PathVariable(value = "location_id", required = true) final String locationId,
-        @NotNull @RequestBody LocationDTO locationDTO
+            @PathVariable(value = "country_code", required = true) final String countryCode,
+            @PathVariable(value = "party_id", required = true) final String partyId,
+            @PathVariable(value = "location_id", required = true) final String locationId,
+            @NotNull @RequestBody LocationDTO locationDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update Location partially : {}/{}/{}, {}", countryCode, partyId, locationId, locationDTO);
         if (locationDTO.getId() == null) {
@@ -139,8 +138,8 @@ public class LocationResource {
         Optional<LocationDTO> result = locationService.partialUpdate(locationDTO);
 
         return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, locationDTO.getId())
+                result,
+                HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, locationDTO.getId())
         );
     }
 
@@ -148,34 +147,34 @@ public class LocationResource {
      * {@code GET  /locations} : get all the locations.
      *
      * @param countryCode the id of the locationDTO to retrieve.
-     * @param partyId the id of the locationDTO to retrieve.
-     * @param dateFrom the date of the locationDTO to retrieve.
-     * @param dateTo the date of the locationDTO to retrieve.
-     * @param offset the offset of the locationDTO to retrieve.
-     * @param limit the limit of the locationDTO to retrieve.
+     * @param partyId     the id of the locationDTO to retrieve.
+     * @param dateFrom    the date of the locationDTO to retrieve.
+     * @param dateTo      the date of the locationDTO to retrieve.
+     * @param offset      the offset of the locationDTO to retrieve.
+     * @param limit       the limit of the locationDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of locations in body.
      */
     @GetMapping("")
     public List<LocationDTO> getAllLocations(
-            @PathVariable(value = "country_code", required = true) final String countryCode,
-            @PathVariable(value = "party_id", required = true) final String partyId,
+            @PathVariable(value = "country_code", required = false) final String countryCode,
+            @PathVariable(value = "party_id", required = false) final String partyId,
             @RequestParam(value = "date_from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") final LocalDateTime dateFrom,
             @RequestParam(value = "date_to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") final LocalDateTime dateTo,
             @RequestParam(value = "offset", required = false) final Integer offset,
             @RequestParam(value = "limit", required = false) final Integer limit) {
-        log.debug("REST request to get all Locations, {},{},{},{}",dateFrom, dateTo, offset, limit);
-        return locationService.findAll(ZonedDateTime.of(dateFrom, ZoneId.of("UTC")), ZonedDateTime.of(dateTo, ZoneId.of("UTC")), offset, limit);
+        log.debug("REST request to get all Locations, {},{},{},{}", dateFrom, dateTo, offset, limit);
+        return locationService.findAll(countryCode, partyId, ZonedDateTime.of(dateFrom, ZoneId.of("UTC")), ZonedDateTime.of(dateTo, ZoneId.of("UTC")), offset, limit);
     }
 
     /**
      * {@code GET  /locations/:id} : get the "id" location.
      *
      * @param countryCode the id of the locationDTO to retrieve.
-     * @param partyId the id of the locationDTO to retrieve.
-     * @param locationId the id of the locationDTO to retrieve.
+     * @param partyId     the id of the locationDTO to retrieve.
+     * @param locationId  the id of the locationDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the locationDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping({"/{location_id}","/{location_id}/{evse_uid}","/{location_id}/{evse_uid}/{connector_id}"})
+    @GetMapping({"/{location_id}", "/{location_id}/{evse_uid}", "/{location_id}/{evse_uid}/{connector_id}"})
     public ResponseEntity<LocationDTO> getLocation(
             @PathVariable(value = "country_code", required = true) final String countryCode,
             @PathVariable(value = "party_id", required = true) final String partyId,
@@ -191,8 +190,8 @@ public class LocationResource {
      * {@code DELETE  /locations/:id} : delete the "id" location.
      *
      * @param countryCode the id of the locationDTO to delete.
-     * @param partyId the id of the locationDTO to delete.
-     * @param locationId the id of the locationDTO to delete.
+     * @param partyId     the id of the locationDTO to delete.
+     * @param locationId  the id of the locationDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{location_id}")
