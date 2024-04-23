@@ -1,6 +1,6 @@
 package com.example.xyz.eventuate;
 
-import com.example.abc.domain.entity.Abc;
+import com.example.abc.domain.dto.AbcDTO;
 import io.eventuate.tram.commands.consumer.CommandDispatcher;
 import io.eventuate.tram.commands.consumer.CommandDispatcherFactory;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcher;
@@ -35,7 +35,7 @@ public class TramMessageConfiguration {
 
     @Bean
     public TramEventConsumer tramEventConsumerTarget() {
-        return new TramEventConsumer(Abc.class.getName());
+        return new TramEventConsumer(AbcDTO.class.getName());
     }
 
     // Command 수신부 --------------------------------------------------------------------------------------------------

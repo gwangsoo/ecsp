@@ -113,7 +113,7 @@ public class XyzResource {
     @GetMapping("")
     public ResponseEntity<List<XyzDTO>> getAllXyzs(
             @RequestParam(value = "attrValue") final String attrValue,
-            @RequestParam(value = "status") final Xyz.XyzStatus status,
+            @RequestParam(value = "status") final XyzDTO.XyzStatus status,
             @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)
             Pageable pageable) {
         log.debug("REST request to get all Xyzs");

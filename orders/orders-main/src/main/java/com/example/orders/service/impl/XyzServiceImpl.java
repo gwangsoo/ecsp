@@ -1,8 +1,8 @@
 package com.example.orders.service.impl;
 
-import com.example.xyz.domain.dto.XyzDTO;
 import com.example.orders.client.XyzServiceClient;
 import com.example.orders.service.XyzService;
+import com.example.xyz.domain.dto.XyzDTO;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

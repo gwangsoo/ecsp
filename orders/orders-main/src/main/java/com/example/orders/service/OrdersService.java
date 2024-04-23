@@ -40,7 +40,7 @@ public interface OrdersService {
      *
      * @return the list of entities.
      */
-    Page<OrdersDTO> findAll(Orders.OrdersStatus ordersStatus, Pageable pageable);
+    Page<OrdersDTO> findAll(OrdersDTO.OrdersStatus ordersStatus, Pageable pageable);
 
     /**
      * Get the "id" announcement.

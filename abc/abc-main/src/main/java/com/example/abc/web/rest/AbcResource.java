@@ -1,7 +1,6 @@
 package com.example.abc.web.rest;
 
 import com.example.abc.domain.dto.AbcDTO;
-import com.example.abc.domain.entity.Abc;
 import com.example.abc.exception.BadRequestAlertException;
 import com.example.abc.repository.AbcRepository;
 import com.example.abc.service.AbcService;
@@ -112,7 +111,7 @@ public class AbcResource {
      */
     @GetMapping("")
     public ResponseEntity<List<AbcDTO>> getAllAbcs(
-            @RequestParam(value = "status") final Abc.AbcStatus status,
+            @RequestParam(value = "status") final AbcDTO.AbcStatus status,
             @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)
             Pageable pageable) {
         log.debug("REST request to get all Abcs");

@@ -1,8 +1,6 @@
 package com.example.xyz.domain.dto;
 
 import com.example.ecsp.common.jpa.AbstractAuditingDTO;
-import com.example.xyz.domain.entity.Xyz;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -21,6 +19,12 @@ import java.util.Set;
 public class XyzDTO extends AbstractAuditingDTO<String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static enum XyzStatus {
+        STANDBY,
+        ACTIVE,
+        DEACTIVE
+    }
+
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Size(max = 16)
     private String id;
@@ -35,7 +39,7 @@ public class XyzDTO extends AbstractAuditingDTO<String> implements Serializable 
     private Long age;
 
     @Schema(description = "상태 (ACTIVE/STANDBY/DEACTIVE)")
-    private Xyz.XyzStatus status;
+    private XyzStatus status;
 
     private Set<XyzDetailDTO> xyzDetails;
 }

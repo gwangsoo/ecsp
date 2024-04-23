@@ -1,14 +1,13 @@
 package com.example.xyz.service.impl;
 
-import com.example.ecsp.common.util.JsonUtil;
 import com.example.xyz.domain.dto.XyzDTO;
 import com.example.xyz.domain.entity.Xyz;
+import com.example.xyz.eventuate.event.XyzDeleteEvent;
 import com.example.xyz.eventuate.event.XyzInsertEvent;
 import com.example.xyz.eventuate.event.XyzUpdateEvent;
 import com.example.xyz.repository.XyzRepository;
 import com.example.xyz.service.XyzService;
 import com.example.xyz.service.mapper.XyzMapper;
-import io.eventuate.common.json.mapper.JSonMapper;
 import io.eventuate.tram.commands.producer.CommandProducer;
 import io.eventuate.tram.events.common.DomainEvent;
 import io.eventuate.tram.events.publisher.DomainEventPublisher;
@@ -52,7 +51,7 @@ public class XyzServiceImpl implements XyzService {
 //        log.debug("xyz.toJson2 = {}", JSonMapper.toJson(xyz));
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new XyzInsertEvent(xyz);
+        DomainEvent domainEvent = new XyzInsertEvent(result);
         domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Collections.singletonList(domainEvent));
 
         return result;
@@ -66,7 +65,7 @@ public class XyzServiceImpl implements XyzService {
         XyzDTO result = xyzMapper.toDto(xyz);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new XyzUpdateEvent(xyz);
+        DomainEvent domainEvent = new XyzUpdateEvent(result);
         domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Collections.singletonList(domainEvent));
 
         return result;
@@ -82,7 +81,7 @@ public class XyzServiceImpl implements XyzService {
                 xyzMapper.partialUpdate(existingXyz, XyzDTO);
 
                 // 도메인 이벤트 저장
-                DomainEvent domainEvent = new XyzUpdateEvent(existingXyz);
+                DomainEvent domainEvent = new XyzUpdateEvent(xyzMapper.toDto(existingXyz));
                 domainEventPublisher.publish(Xyz.class.getName(), existingXyz.getId(), Collections.singletonList(domainEvent));
 
                 return existingXyz;
@@ -96,7 +95,7 @@ public class XyzServiceImpl implements XyzService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<XyzDTO> findAll(String attrValue, Xyz.XyzStatus xyzStatus, Pageable pageable) {
+    public Page<XyzDTO> findAll(String attrValue, XyzDTO.XyzStatus xyzStatus, Pageable pageable) {
         log.debug("Request to get all Xyzs");
 
         Specification<Xyz> spec = XyzRepository.Spec.instance().equal("status", xyzStatus);
@@ -127,7 +126,7 @@ public class XyzServiceImpl implements XyzService {
     public void delete(String id) {
         log.debug("Request to delete Xyz : {}", id);
 
-        Xyz xyz = xyzRepository.findById(id).orElse(null);
+        XyzDTO xyz = xyzRepository.findById(id).map(xyzMapper::toDto).orElse(null);
 
         if(xyz == null) return;
 
@@ -138,7 +137,7 @@ public class XyzServiceImpl implements XyzService {
         xyzRepository.deleteById(id);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new XyzUpdateEvent(xyz);
+        DomainEvent domainEvent = new XyzDeleteEvent(xyz);
         domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Collections.singletonList(domainEvent));
 
     }

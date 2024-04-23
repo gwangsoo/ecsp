@@ -1,6 +1,5 @@
 package com.example.orders.domain.dto;
 
-import com.example.orders.domain.entity.Orders;
 import com.example.ecsp.common.jpa.AbstractAuditingDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +19,12 @@ import java.io.Serializable;
 public class OrdersDTO extends AbstractAuditingDTO<String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static enum OrdersStatus {
+        ACCEPTED,
+        REJECTED,
+        APPROVED
+    }
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Size(max = 16)
     private String id;
@@ -38,5 +43,5 @@ public class OrdersDTO extends AbstractAuditingDTO<String> implements Serializab
     private Long size;
 
     @Schema(description = "상태 (ACCEPTED/REJECTED/APPROVED)")
-    private Orders.OrdersStatus status;
+    private OrdersStatus status;
 }

@@ -1,6 +1,6 @@
 package com.example.abc.eventuate.event;
 
-import com.example.abc.domain.entity.Abc;
+import com.example.abc.domain.dto.AbcDTO;
 import io.eventuate.tram.events.common.DomainEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AbcUpdateEvent implements DomainEvent {
-    private Abc abc;
+    private AbcDTO abc;
 }

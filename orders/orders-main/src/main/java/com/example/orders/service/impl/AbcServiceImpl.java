@@ -27,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Slf4j
 @Service
 @Transactional

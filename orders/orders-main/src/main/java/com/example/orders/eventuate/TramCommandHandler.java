@@ -54,7 +54,7 @@ public class TramCommandHandler {
 
         try {
             OrdersDTO ordersDto = ordersService.findOne(cm.getCommand().getOrders().getId()).orElseThrow();
-            if(ordersDto.getStatus() == Orders.OrdersStatus.APPROVED) {
+            if(ordersDto.getStatus() == OrdersDTO.OrdersStatus.APPROVED) {
                 throw new BadRequestAlertException("유효한 데이터가 아님", OrdersDTO.class.getName(), "idnull");
             }
             return withSuccess();

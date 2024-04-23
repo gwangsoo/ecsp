@@ -4,6 +4,7 @@ import com.example.ecsp.common.util.JsonUtil;
 import com.example.orders.domain.dto.OrdersDTO;
 import com.example.orders.domain.entity.Orders;
 import com.example.orders.eventuate.CreateOrdersSaga;
+import com.example.orders.eventuate.event.OrdersDeleteEvent;
 import com.example.orders.eventuate.event.OrdersInsertEvent;
 import com.example.orders.eventuate.event.OrdersUpdateEvent;
 import com.example.orders.repository.OrdersRepository;
@@ -56,7 +57,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
         sagaInstanceFactory.create(createOrdersSaga, orders);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new OrdersInsertEvent(orders);
+        DomainEvent domainEvent = new OrdersInsertEvent(result);
         domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Collections.singletonList(domainEvent));
 
         return result;
@@ -70,7 +71,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
         OrdersDTO result = ordersMapper.toDto(orders);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new OrdersUpdateEvent(orders);
+        DomainEvent domainEvent = new OrdersUpdateEvent(result);
         domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Collections.singletonList(domainEvent));
 
         return result;
@@ -86,7 +87,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
                 ordersMapper.partialUpdate(existingOrders, OrdersDTO);
 
                 // 도메인 이벤트 저장
-                DomainEvent domainEvent = new OrdersUpdateEvent(existingOrders);
+                DomainEvent domainEvent = new OrdersUpdateEvent(ordersMapper.toDto(existingOrders));
                 domainEventPublisher.publish(Orders.class.getName(), existingOrders.getId(), Collections.singletonList(domainEvent));
 
                 return existingOrders;
@@ -100,7 +101,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
 
     @Override
     @Transactional(readOnly = true)
-    public Page<OrdersDTO> findAll(Orders.OrdersStatus ordersStatus, Pageable pageable) {
+    public Page<OrdersDTO> findAll(OrdersDTO.OrdersStatus ordersStatus, Pageable pageable) {
         log.debug("Request to get all Orderss");
 
 //        Long length1 = ordersRepository.getLength();
@@ -129,7 +130,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
     public void delete(String id) {
         log.debug("Request to delete Orders : {}", id);
 
-        Orders orders = ordersRepository.findById(id).orElse(null);
+        OrdersDTO orders = ordersRepository.findById(id).map(ordersMapper::toDto).orElse(null);
 
         if(orders == null) return;
 
@@ -140,7 +141,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
         ordersRepository.deleteById(id);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new OrdersUpdateEvent(orders);
+        DomainEvent domainEvent = new OrdersDeleteEvent(orders);
         domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Collections.singletonList(domainEvent));
 
     }
