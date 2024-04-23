@@ -1,16 +1,26 @@
 # 로컬 개발 환경
 
-* 참조
-  * Sample
-    * https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders
-    * https://github.com/microservices-patterns/ftgo-application
-  * CDC설정 : https://eventuate.io/docs/manual/eventuate-tram/latest/cdc-configuration.html
-  * Schema
-    * mysql
-      * common : https://github.com/eventuate-foundation/eventuate-common/tree/master/mysql
-      * saga : https://github.com/eventuate-tram/eventuate-tram-sagas/mysql
+<!-- TOC -->
+* [로컬 개발 환경](#로컬-개발-환경)
+  * [1. local 개발 환경 준비](#1-local-개발-환경-준비)
+  * [2. 마이크로서비스별](#2-마이크로서비스별)
+    * [2.1 공통](#21-공통)
+      * [2.1.1. versions](#211-versions)
+      * [2.1.2. Back-end 프로젝트 구조 및 패키지경로](#212-back-end-프로젝트-구조-및-패키지경로)
+      * [2.1.3. Build](#213-build)
+      * [2.1.4. Run](#214-run)
+    * [2.2. Backend](#22-backend)
+      * [2.2.1. Orchestration Saga Pattern](#221-orchestration-saga-pattern)
+      * [2.2.2. Resilience4](#222-resilience4)
+      * [샘플](#샘플)
+    * [2.3. BFI](#23-bfi)
+      * [2.3.1. MongoDB](#231-mongodb)
+    * [2.4. BFF](#24-bff)
+  * [4. TODO](#4-todo)
+  * [5. 참고](#5-참고)
+<!-- TOC -->
 
-## local 개발 환경 준비
+## 1. local 개발 환경 준비
 
 * 실행중인 docker-compose container 를 내리고 삭제한다.
   ````
@@ -53,9 +63,11 @@
 | GatewayService  | http://localhost:8090/                                     |                                             |                                                                                       |
 | BffService      | http://localhost:8091/services/bff/swagger-ui/index.html   |                                             |                                                                                       |
 
-## Back-end
+## 2. 마이크로서비스별
 
-### versions
+### 2.1 공통
+
+#### 2.1.1. versions
 
 * Java : JDK 17 LTS
 * SpringBoot : 3.2.4
@@ -68,7 +80,7 @@
 * mapstruct : 1.5.5.Final
 * springdoc-openapi-webmvc : 2.2.0
 
-### Back-end 프로젝트 구조 및 패키지경로
+#### 2.1.2. Back-end 프로젝트 구조 및 패키지경로
 
 * xxxxx Project : com.hae.ecsp.xxxxx
   * sub projtect : xxxxx-share
@@ -93,7 +105,7 @@
       * rest
       * websocket
 
-### Build
+#### 2.1.3. Build
 
 * common
   * common build
@@ -122,8 +134,19 @@
     ````
     ./gradlew bootRun
     ````
-    
-### Orchestration Saga Pattern
+
+#### 2.1.4. Run
+
+* 인증없이 실행
+  * 실행시 profile 에 noauth 를 넣습니다. (profile은 복수개 지정 가능합니다. 콤마로 구분)
+* 인증 실행
+  * noauth 가 지정되지 않으면 인증 api 호출시 인증을 체크합니다.
+  * 향후 gateway -> bff -> backend 의 구조로 호출하면 로그인 후 인증이 가능해집니다.
+  * spring security 권한 샘플 완료시 가이드 예정입니다. 
+
+### 2.2. Backend
+
+#### 2.2.1. Orchestration Saga Pattern
 
 샘플은 orders-main 프로젝트의 CreateOrdersSaga.java 를 참고합니다.
 아래 예와 같이 Saga를 step() 단위로 정의하고, 호출할 command 와 오류처리 및 응답에 대한 처리를 합니다.
@@ -146,8 +169,8 @@
         .build()
         ;
 ````
-    
-### Resilience4
+
+#### 2.2.2. Resilience4
 
 샘플은 orders-main 프로젝트의 AbcServiceClient.java, XyzServiceClient.java 를 참고합니다.
 
@@ -319,7 +342,7 @@ public interface AbcServiceClient {
 ````
 
 * Instance 생성
-Json 처리를 위해 ObjectMapper를 상대 API에 맞게 생성하여 주입한다.
+  Json 처리를 위해 ObjectMapper를 상대 API에 맞게 생성하여 주입한다.
 ````java
 public class AbcServiceImpl implements AbcService {
 
@@ -384,22 +407,13 @@ public class Sample {
 }
 ````
 
-### Run
-
-* 인증없이 실행
-  * 실행시 profile 에 noauth 를 넣습니다. (profile은 복수개 지정 가능합니다. 콤마로 구분)
-* 인증 실행
-  * noauth 가 지정되지 않으면 인증 api 호출시 인증을 체크합니다.
-  * 향후 gateway -> bff -> backend 의 구조로 호출하면 로그인 후 인증이 가능해집니다.
-  * spring security 권한 샘플 완료시 가이드 예정입니다. 
-
-### BFI
+### 2.3. BFI
 
 BFI (Backend For Interface) 는 MongoDB를 사용합니다.
 
 docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
 
-#### MongoDB
+#### 2.3.1. MongoDB
 
 * Database 생성 후 권한 설정 (콘솔사용)
   ````
@@ -408,7 +422,9 @@ docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
   db.createUser({user:'root',pwd:'example',roles:['dbOwner']});
   ````
 
-### TODO
+### 2.4. BFF
+
+## 4. TODO
 
 * ~~eventaute saga 패턴 샘플~~
 * ~~resilience4j 샘플~~
@@ -420,3 +436,14 @@ docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
 * ~~Gateway 샘플~~
 * multi-tenant 샘플
 * spring security 권한 샘플
+
+## 5. 참고
+
+* Sample
+  * https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders
+  * https://github.com/microservices-patterns/ftgo-application
+* CDC설정 : https://eventuate.io/docs/manual/eventuate-tram/latest/cdc-configuration.html
+* Schema
+  * mysql
+    * common : https://github.com/eventuate-foundation/eventuate-common/tree/master/mysql
+    * saga : https://github.com/eventuate-tram/eventuate-tram-sagas/mysql
