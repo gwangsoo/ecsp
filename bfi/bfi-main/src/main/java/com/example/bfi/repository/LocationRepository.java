@@ -29,7 +29,7 @@ public interface LocationRepository extends MongoRepository<Location, String> {
      * - ref MongoDB url : https://www.mongodb.com/docs/manual/reference/operator/aggregation/
      * - ref MongoRepository url : https://docs.spring.io/spring-data/mongodb/reference/mongodb/repositories/query-methods.html
      */
-    @Aggregation(pipeline = {"{'$match': { '$and':  [ {'country_code' : ?#{[0]} }, {'partyId': ?#{[1]}}, {'last_updated': {'$gte': ?#{[2]} , '$lt': ?#{[3]}} }] }}"
+    @Aggregation({"{'$match': { '$and':  [ {'country_code' : ?#{[0]} }, {'partyId': ?#{[1]}}, {'last_updated': {'$gte': ?#{[2]} , '$lt': ?#{[3]}} }] }}"
                             ,"{'$skip': ?#{[4]}}", "{'$limit': ?#{[5]}}"})
     List<Location> findAllByLastUpdated(String countryCode, String partyId, ZonedDateTime from, ZonedDateTime to, Integer offset, Integer limit);
 }
