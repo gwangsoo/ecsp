@@ -74,13 +74,14 @@
   * sub projtect : xxxxx-share
     * domain
       * dto
-      * entity
     * eventuate
       * command
       * event
   * sub project : xxxxx-main
     * client
     * config
+    * domain
+      * entity
     * eventuate
     * repository
     * security
