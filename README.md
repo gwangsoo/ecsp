@@ -138,7 +138,7 @@
 #### 2.1.4. Run
 
 * 인증없이 실행
-  * 실행시 profile 에 noauth 를 넣습니다. (profile은 복수개 지정 가능합니다. 콤마로 구분)
+  * 실행시 profile 에 **noauth** 를 넣습니다. (profile은 복수개 지정 가능합니다. 콤마로 구분)
   ![](images/run_debug_config.png)
 * 인증 실행
   * noauth 가 지정되지 않으면 인증 api 호출시 인증을 체크합니다.
