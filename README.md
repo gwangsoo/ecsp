@@ -428,7 +428,7 @@ docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
 
 * ~~eventaute saga 패턴 샘플~~
 * ~~resilience4j 샘플~~
-* 몽고DB 연계 샘플
+* ~~몽고DB 연계 샘플~~
 * ~~zipkin / sleuth~~
   * io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-common:0.4.0.RELEASE 버전이 맞지않아 적용되지 않으나, 향후 적용 예정.
 * kafka-connect
