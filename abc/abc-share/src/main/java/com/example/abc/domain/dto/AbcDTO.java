@@ -1,6 +1,7 @@
 package com.example.abc.domain.dto;
 
 import com.example.ecsp.common.jpa.AbstractAuditingDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -38,4 +39,7 @@ public class AbcDTO extends AbstractAuditingDTO<String> implements Serializable 
 
     @Schema(description = "상태 (OPEN/CLOSE)")
     private AbcStatus status;
+
+    // TODO 마이크로서비스간 연계 방법 고려해야 함.
+    private String tenantId;
 }

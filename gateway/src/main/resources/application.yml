@@ -82,6 +82,23 @@ spring:
           predicates:
             - Path=/services/bff/cci/**
 
+        - id: abc
+          uri: http://localhost:8082
+          predicates:
+            - Path=/services/abc/**
+        - id: xyz
+          uri: http://localhost:8083
+          predicates:
+            - Path=/services/xyz/**
+        - id: orders
+          uri: http://localhost:8084
+          predicates:
+            - Path=/services/orders/**
+        - id: bfi
+          uri: http://localhost:8085
+          predicates:
+            - Path=/services/bfi/**
+
 management:
   endpoints:
     web:

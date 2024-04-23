@@ -1,7 +1,9 @@
 package com.example.abc.domain.entity;
 
 import com.example.abc.domain.dto.AbcDTO;
+import com.example.abc.tenant.TenantAwareEntityListener;
 import com.example.ecsp.common.jpa.AbstractAuditingEntity;
+import com.example.ecsp.common.jpa.TenantAware;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +22,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tb_abc")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Abc extends AbstractAuditingEntity<String> implements Serializable {
+@EntityListeners(TenantAwareEntityListener.class)
+public class Abc extends AbstractAuditingEntity<String> implements Serializable, TenantAware {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -41,4 +44,8 @@ public class Abc extends AbstractAuditingEntity<String> implements Serializable 
 //    @Comment("상태 (OPEN/CLOSE)")
 //    @ColumnDefault("OPEN")
     private AbcDTO.AbcStatus status;
+
+    @TenantId
+    @Column(name = "tenant_id", length = 50, updatable = false)
+    private String tenantId;
 }

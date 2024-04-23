@@ -27,7 +27,7 @@ public class OAuth2ReactiveRefreshTokensWebFilter implements WebFilter {
     private final ReactiveOAuth2AuthorizedClientManager clientManager;
 
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        return ServerWebExchangeMatchers.pathMatchers("/services/backend/api/auth/**")
+        return ServerWebExchangeMatchers.pathMatchers("/services/**")
             .matches(exchange)
             .filter(matchResult -> matchResult.isMatch() == true)
             .flatMap(matchResult -> exchange

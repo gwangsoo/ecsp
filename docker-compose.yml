@@ -97,3 +97,14 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+
+  nginx:
+    image: nginx
+    hostname: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - TZ=Asia/Seoul

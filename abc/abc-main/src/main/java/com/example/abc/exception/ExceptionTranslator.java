@@ -244,7 +244,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
             "com.",
             "io.",
             "de.",
-            "com.xrfriends.careeasy"
+            "com.example."
         );
     }
 }

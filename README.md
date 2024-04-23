@@ -3,6 +3,8 @@
 <!-- TOC -->
 * [로컬 개발 환경](#로컬-개발-환경)
   * [1. local 개발 환경 준비](#1-local-개발-환경-준비)
+    * [1.1. local 개발환경 다이어그램](#11-local-개발환경-다이어그램)
+    * [1.2. local 개발환경](#12-local-개발환경)
   * [2. 마이크로서비스별](#2-마이크로서비스별)
     * [2.1 공통](#21-공통)
       * [2.1.1. versions](#211-versions)
@@ -21,6 +23,12 @@
 <!-- TOC -->
 
 ## 1. local 개발 환경 준비
+
+### 1.1. local 개발환경 다이어그램
+
+![Local Architecture](images/local-arch.svg)
+
+### 1.2. local 개발환경
 
 * 실행중인 docker-compose container 를 내리고 삭제한다.
   ````
@@ -49,19 +57,20 @@
   docker-compose logs -f <서비스명>
   ````
 
-| 구분              | endpoint                                                   | id / pw                                     | 기타                                                                                    |
-|-----------------|------------------------------------------------------------|---------------------------------------------|---------------------------------------------------------------------------------------|
-| kafka ui        | http://localhost:3030/                                     |                                             |                                                                                       |
-| mysql           | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                                                                                       |
-| mongodb         | localhost:27017                                            | root / example                              |                                                                                       |
-| mongo express   | http://localhost:8088/db/bfi/                              | admin / pass                                |                                                                                       |
-| Zipkin          | http://localhost:9411/zipkin/                              |                                             | service tracing                                                                       |
-| AbcService      | http://localhost:8082/services/abc/swagger-ui/index.html   |                                             | post method가 호출되면 Abc 등록 후 Xyz도 등록 Command를 호출한다.                                     |
-| XyzService      | http://localhost:8083/services/xyz/swagger-ui/index.html   |                                             |                                                                                       |
-| OrderService    | http://localhost:8084/services/order/swagger-ui/index.html |                                             | post method가 호출되면 order를 등록 후 SAGA패턴을 사용하여 Abc,Xyz 서비스를 호출하여 등록하고 완료시 order 상태를 변경한다. |
-| BfiService      | http://localhost:8085/services/bfi/swagger-ui/index.html   |                                             |                                                                                       |
-| GatewayService  | http://localhost:8090/                                     |                                             |                                                                                       |
-| BffService      | http://localhost:8091/services/bff/swagger-ui/index.html   |                                             |                                                                                       |
+| 구분             | endpoint                                                   | id / pw                                     | 기타                                                                                  |
+|----------------|------------------------------------------------------------|---------------------------------------------|-------------------------------------------------------------------------------------|
+| keycloak       | https://auth.xr-friends.com/ev/                            | admin / ev123                               | issuer-uri: https://auth.xr-friends.com/ev/realms/example                           |
+| kafka ui       | http://localhost:3030/                                     |                                             |                                                                                     |
+| mysql          | localhost:3306                                             | mysqluser / mysqlpw<br/>root / rootpassword |                                                                                     |
+| mongodb        | localhost:27017                                            | root / example                              |                                                                                     |
+| mongo express  | http://localhost:8088/db/bfi/                              | admin / pass                                |                                                                                     |
+| Zipkin         | http://localhost:9411/zipkin/                              |                                             | service tracing                                                                     |
+| AbcService     | http://localhost:8082/services/abc/swagger-ui/index.html   |                                             | post method가 호출되면 Abc 등록 후 Xyz도 등록 Command를 호출한다.                                   |
+| XyzService     | http://localhost:8083/services/xyz/swagger-ui/index.html   |                                             |                                                                                     |
+| OrderService   | http://localhost:8084/services/order/swagger-ui/index.html |                                             | post method가 호출되면 order를 등록 후 SAGA패턴을 사용하여 Abc,Xyz 서비스를 호출하여 등록하고 완료시 order 상태를 변경한다. |
+| BfiService     | http://localhost:8085/services/bfi/swagger-ui/index.html   |                                             |                                                                                     |
+| GatewayService | http://localhost:8090/                                     |                                             |                                                                                     |
+| BffService     | http://localhost:8091/services/bff/swagger-ui/index.html   |                                             |                                                                                     |
 
 ## 2. 마이크로서비스별
 
@@ -435,7 +444,7 @@ docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
 * kafka-connect
 * Bff 샘플
 * ~~Gateway 샘플~~
-* multi-tenant 샘플
+* ~~multi-tenant 샘플~~
 * spring security 권한 샘플
 
 ## 5. 참고
@@ -448,3 +457,5 @@ docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
   * mysql
     * common : https://github.com/eventuate-foundation/eventuate-common/tree/master/mysql
     * saga : https://github.com/eventuate-tram/eventuate-tram-sagas/mysql
+* JPA
+  * https://docs.jboss.org/hibernate/orm/6.4/userguide/html_single/Hibernate_User_Guide.html
