@@ -1,0 +1,38 @@
+logging:
+  pattern:
+    console: "${CONSOLE_LOG_PATTERN:%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:%5p} [%t] [%logger{39}] %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}"
+
+server:
+  port: 8080
+
+base-url: "https://ecsp.example.com"
+
+logout-success-url: "/main/MainPage"
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          adminapp:
+            client-id: adminapp
+            client-secret: adminapp
+        provider:
+          keycloak:
+            issuer-uri: "https://auth.xr-friends.com/ev/realms/example"
+
+  cloud:
+    gateway:
+      routes:
+        - id: admin
+          uri: http://bff-admin:8080
+          predicates:
+            - Path=/services/bff/admin/**
+        - id: app
+          uri: http://bff-app:8080
+          predicates:
+            - Path=/services/bff/app/**
+        - id: cci
+          uri: http://bff-cci:8080
+          predicates:
+            - Path=/services/bff/cci/**

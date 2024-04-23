@@ -112,17 +112,17 @@ spring:
     ansi:
       console-available: true
 
-#  security:
-#    oauth2:
-#      client:
-#        provider:
-#          oidc:
-#            issuer-uri: https://auth.xr-friends.com/auth/realms/careeasy
-#        registration:
-#          oidc:
-#            client-id: app
-#            client-secret: app
-#            scope: openid, profile, email, offline_access # last one for refresh tokens
+  security:
+    oauth2:
+      client:
+        provider:
+          adminapp:
+            issuer-uri: https://auth.xr-friends.com/ev/realms/example
+        registration:
+          adminapp:
+            client-id: adminapp
+            client-secret: adminapp
+            scope: openid, profile, email, offline_access # last one for refresh tokens
 
 #  servlet:
 #    multipart:
