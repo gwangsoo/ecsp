@@ -40,7 +40,7 @@ public interface XyzService {
      *
      * @return the list of entities.
      */
-    Page<XyzDTO> findAll(String attrValue, Xyz.XyzStatus xyzStatus, Pageable pageable);
+    Page<XyzDTO> findAll(String attrValue, XyzDTO.XyzStatus xyzStatus, Pageable pageable);
 
     /**
      * Get the "id" announcement.

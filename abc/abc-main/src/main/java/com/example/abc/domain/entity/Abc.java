@@ -1,7 +1,7 @@
-package com.example.xyz.domain.entity;
+package com.example.abc.domain.entity;
 
+import com.example.abc.domain.dto.AbcDTO;
 import com.example.ecsp.common.jpa.AbstractAuditingEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.TenantId;
 
 import java.io.Serializable;
 
@@ -18,9 +18,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_xyz_detail")
+@Table(name = "tb_abc")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class XyzDetail extends AbstractAuditingEntity<String> implements Serializable {
+public class Abc extends AbstractAuditingEntity<String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -28,18 +28,17 @@ public class XyzDetail extends AbstractAuditingEntity<String> implements Seriali
 //    @Comment("id")
     private String id;
 
-    @Column(name = "attr_name", length = 32)
-//    @Comment("속성명")
-    private String attrName;
+    @Column(name = "data", length = 256)
+//    @Comment("데이타")
+    private String data;
 
-    @Column(name = "attr_value", length = 256)
-//    @Comment("속성값")
-    private String attrValue;
+    @Column(name = "size")
+//    @Comment("사이즈")
+    private Long size;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(
-            value = { "xyzDetails", "name", "age" },
-            allowSetters = true
-    )
-    private Xyz xyz;
+    @Column(name = "status", length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
+//    @Comment("상태 (OPEN/CLOSE)")
+//    @ColumnDefault("OPEN")
+    private AbcDTO.AbcStatus status;
 }

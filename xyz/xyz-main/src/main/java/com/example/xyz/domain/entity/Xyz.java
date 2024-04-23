@@ -1,16 +1,17 @@
 package com.example.xyz.domain.entity;
 
 import com.example.ecsp.common.jpa.AbstractAuditingEntity;
+import com.example.xyz.domain.dto.XyzDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -24,12 +25,6 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Xyz extends AbstractAuditingEntity<String> implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    public static enum XyzStatus {
-        STANDBY,
-        ACTIVE,
-        DEACTIVE
-    }
 
     @Id
     @Column(name = "id", length = 16, nullable = false)
@@ -48,7 +43,7 @@ public class Xyz extends AbstractAuditingEntity<String> implements Serializable 
     @Enumerated(EnumType.STRING)
 //    @Comment("상태 (STANDBY/ACTIVE/DEACTIVE)")
 //    @ColumnDefault("STANDBY")
-    private XyzStatus status;
+    private XyzDTO.XyzStatus status;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "xyz", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

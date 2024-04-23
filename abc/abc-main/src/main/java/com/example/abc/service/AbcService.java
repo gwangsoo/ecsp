@@ -40,7 +40,7 @@ public interface AbcService {
      *
      * @return the list of entities.
      */
-    Page<AbcDTO> findAll(Abc.AbcStatus abcStatus, Pageable pageable);
+    Page<AbcDTO> findAll(AbcDTO.AbcStatus abcStatus, Pageable pageable);
 
     /**
      * Get the "id" announcement.

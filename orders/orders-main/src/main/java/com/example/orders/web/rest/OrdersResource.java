@@ -4,7 +4,6 @@ import com.example.ecsp.common.util.HeaderUtil;
 import com.example.ecsp.common.util.PaginationUtil;
 import com.example.ecsp.common.util.ResponseUtil;
 import com.example.orders.domain.dto.OrdersDTO;
-import com.example.orders.domain.entity.Orders;
 import com.example.orders.exception.BadRequestAlertException;
 import com.example.orders.repository.OrdersRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -111,7 +110,7 @@ public class OrdersResource {
      */
     @GetMapping("")
     public ResponseEntity<List<OrdersDTO>> getAllOrderss(
-            @RequestParam(value = "status") final Orders.OrdersStatus status,
+            @RequestParam(value = "status") final OrdersDTO.OrdersStatus status,
             @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)
             Pageable pageable) {
         log.debug("REST request to get all Orderss");

@@ -3,6 +3,7 @@ package com.example.abc.service.impl;
 import com.example.abc.domain.dto.AbcDTO;
 import com.example.abc.domain.entity.Abc;
 import com.example.abc.eventuate.AbcTramMessageConfig;
+import com.example.abc.eventuate.event.AbcDeleteEvent;
 import com.example.abc.eventuate.event.AbcInsertEvent;
 import com.example.abc.eventuate.event.AbcUpdateEvent;
 import com.example.abc.repository.AbcRepository;
@@ -11,7 +12,6 @@ import com.example.abc.service.mapper.AbcMapper;
 import com.example.ecsp.common.util.JsonUtil;
 import com.example.xyz.domain.dto.XyzDTO;
 import com.example.xyz.domain.dto.XyzDetailDTO;
-import com.example.xyz.domain.entity.Xyz;
 import com.example.xyz.eventuate.XyzTramMessageConfig;
 import com.example.xyz.eventuate.command.XyzRegisterCommand;
 import io.eventuate.common.json.mapper.JSonMapper;
@@ -57,7 +57,7 @@ public class AbcServiceImpl implements AbcService {
         log.debug("abc.toJson2 = {}", JSonMapper.toJson(abc));
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new AbcInsertEvent(abc);
+        DomainEvent domainEvent = new AbcInsertEvent(result);
         domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Collections.singletonList(domainEvent));
 
         // 등록시 다른 서비스에 Command를 실행해야 하는 경우
@@ -65,7 +65,7 @@ public class AbcServiceImpl implements AbcService {
                 new XyzRegisterCommand(XyzDTO.builder()
                         .name("abc")
                         .age(30L)
-                        .status(Xyz.XyzStatus.STANDBY)
+                        .status(XyzDTO.XyzStatus.STANDBY)
                         .xyzDetails(Set.of(XyzDetailDTO.builder().attrName("data").attrValue(abc.getData()).build()))
                         .build()),
                 AbcTramMessageConfig.replyChannel,
@@ -83,7 +83,7 @@ public class AbcServiceImpl implements AbcService {
         AbcDTO result = abcMapper.toDto(abc);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new AbcUpdateEvent(abc);
+        DomainEvent domainEvent = new AbcUpdateEvent(result);
         domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Collections.singletonList(domainEvent));
 
         return result;
@@ -99,7 +99,7 @@ public class AbcServiceImpl implements AbcService {
                 abcMapper.partialUpdate(existingAbc, AbcDTO);
 
                 // 도메인 이벤트 저장
-                DomainEvent domainEvent = new AbcUpdateEvent(existingAbc);
+                DomainEvent domainEvent = new AbcUpdateEvent(abcMapper.toDto(existingAbc));
                 domainEventPublisher.publish(Abc.class.getName(), existingAbc.getId(), Collections.singletonList(domainEvent));
 
                 return existingAbc;
@@ -113,7 +113,7 @@ public class AbcServiceImpl implements AbcService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AbcDTO> findAll(Abc.AbcStatus abcStatus, Pageable pageable) {
+    public Page<AbcDTO> findAll(AbcDTO.AbcStatus abcStatus, Pageable pageable) {
         log.debug("Request to get all Abcs");
 
 //        Long length1 = abcRepository.getLength();
@@ -142,7 +142,7 @@ public class AbcServiceImpl implements AbcService {
     public void delete(String id) {
         log.debug("Request to delete Abc : {}", id);
 
-        Abc abc = abcRepository.findById(id).orElse(null);
+        AbcDTO abc = abcRepository.findById(id).map(abcMapper::toDto).orElse(null);
 
         if(abc == null) return;
 
@@ -153,7 +153,7 @@ public class AbcServiceImpl implements AbcService {
         abcRepository.deleteById(id);
 
         // 도메인 이벤트 저장
-        DomainEvent domainEvent = new AbcUpdateEvent(abc);
+        DomainEvent domainEvent = new AbcDeleteEvent(abc);
         domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Collections.singletonList(domainEvent));
 
     }

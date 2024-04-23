@@ -1,6 +1,7 @@
 package com.example.orders.domain.entity;
 
 import com.example.ecsp.common.jpa.AbstractAuditingEntity;
+import com.example.orders.domain.dto.OrdersDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +21,6 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Orders extends AbstractAuditingEntity<String> implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    public static enum OrdersStatus {
-        ACCEPTED,
-        REJECTED,
-        APPROVED
-    }
 
     @Id
     @Column(name = "id", length = 16, nullable = false)
@@ -48,5 +43,5 @@ public class Orders extends AbstractAuditingEntity<String> implements Serializab
     @Enumerated(EnumType.STRING)
 //    @Comment("상태 (OPEN/CLOSE)")
 //    @ColumnDefault("OPEN")
-    private OrdersStatus status;
+    private OrdersDTO.OrdersStatus status;
 }

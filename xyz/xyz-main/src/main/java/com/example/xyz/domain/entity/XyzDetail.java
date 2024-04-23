@@ -1,6 +1,7 @@
-package com.example.abc.domain.entity;
+package com.example.xyz.domain.entity;
 
 import com.example.ecsp.common.jpa.AbstractAuditingEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,32 +17,28 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_abc")
+@Table(name = "tb_xyz_detail")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Abc extends AbstractAuditingEntity<String> implements Serializable {
+public class XyzDetail extends AbstractAuditingEntity<String> implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    public static enum AbcStatus {
-        OPEN,
-        CLOSE
-    }
 
     @Id
     @Column(name = "id", length = 16, nullable = false)
 //    @Comment("id")
     private String id;
 
-    @Column(name = "data", length = 256)
-//    @Comment("데이타")
-    private String data;
+    @Column(name = "attr_name", length = 32)
+//    @Comment("속성명")
+    private String attrName;
 
-    @Column(name = "size")
-//    @Comment("사이즈")
-    private Long size;
+    @Column(name = "attr_value", length = 256)
+//    @Comment("속성값")
+    private String attrValue;
 
-    @Column(name = "status", length = 50, nullable = false)
-    @Enumerated(EnumType.STRING)
-//    @Comment("상태 (OPEN/CLOSE)")
-//    @ColumnDefault("OPEN")
-    private AbcStatus status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(
+            value = { "xyzDetails", "name", "age" },
+            allowSetters = true
+    )
+    private Xyz xyz;
 }

@@ -1,7 +1,6 @@
 package com.example.abc.eventuate;
 
 import com.example.abc.domain.dto.AbcDTO;
-import com.example.abc.domain.entity.Abc;
 import com.example.abc.eventuate.command.AbcRegisterCommand;
 import com.example.abc.eventuate.command.ConfirmAbcCommand;
 import com.example.abc.exception.BadRequestAlertException;
@@ -55,7 +54,7 @@ public class TramCommandHandler {
 
         try {
             AbcDTO abcDto = abcService.findOne(cm.getCommand().getAbc().getId()).orElseThrow();
-            if(abcDto.getStatus() != Abc.AbcStatus.OPEN) {
+            if(abcDto.getStatus() != AbcDTO.AbcStatus.OPEN) {
                 throw new BadRequestAlertException("유효한 데이터가 아님", AbcDTO.class.getName(), "idnull");
             }
             return withSuccess();
