@@ -1,6 +1,8 @@
 db = db.getSiblingDB('bfi')
 db.createUser({user: 'root', pwd: 'example', roles: [{role: 'dbOwner', db: 'bfi',},],});
 
+
+// ISODate 관련 참고 https://www.mongodb.com/ko-kr/docs/rapid/reference/method/Date/
 db.location.insertMany(
     [
         {
