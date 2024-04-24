@@ -422,7 +422,9 @@ public class Sample {
 
 BFI (Backend For Interface) 는 MongoDB를 사용합니다.
 
-docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
+~~docker로 실행되는 MongoDB에 초기 설정이 필요합니다.~~
+
+docker-compose 실행 시 초기설정을 자동으로 구성되도록 함.
 
 #### 2.3.1. MongoDB
 
@@ -434,6 +436,8 @@ docker로 실행되는 MongoDB에 초기 설정이 필요합니다.
   ````
 
 ### 2.4. BFF
+
+* GraphQL or else (검토중)
 
 ## 4. TODO
 
