@@ -5,6 +5,8 @@
   * [1. local 개발 환경 준비](#1-local-개발-환경-준비)
     * [1.1. local 개발환경 다이어그램](#11-local-개발환경-다이어그램)
     * [1.2. local 개발환경](#12-local-개발환경)
+      * [1.2.1. docker-compose 명령어](#121-docker-compose-명령어)
+      * [1.2.2. local환경 end-point list](#122-local환경-end-point-list)
   * [2. 마이크로서비스별](#2-마이크로서비스별)
     * [2.1 공통](#21-공통)
       * [2.1.1. versions](#211-versions)

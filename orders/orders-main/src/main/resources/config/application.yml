@@ -2,7 +2,7 @@ server:
   port: ${PORT:8084}
   shutdown: graceful
   servlet:
-    context-path: /services/order
+    context-path: /services/orders
     session:
       cookie:
         secure: true
