@@ -112,7 +112,7 @@ spring:
 
   task:
     execution:
-      thread-name-prefix: care-easy-task-
+      thread-name-prefix: bfi-task-
       pool:
         core-size: 1
         max-size: 50

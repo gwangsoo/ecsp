@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "ORDERS Service APIs",
-                description = "XR-Friends ABC Service API",
+                description = "XR-Friends ORDERS Service API",
                 version = "v1"
         ),
         servers = {@Server(url = "/services/orders/", description = "Default Server URL")}

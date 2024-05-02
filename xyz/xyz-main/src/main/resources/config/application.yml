@@ -98,7 +98,7 @@ spring:
 
   task:
     execution:
-      thread-name-prefix: care-easy-task-
+      thread-name-prefix: xyz-task-
       pool:
         core-size: 1
         max-size: 50

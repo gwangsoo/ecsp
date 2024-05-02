@@ -2,6 +2,7 @@ package com.example.orders.service.impl;
 
 import com.example.abc.domain.dto.AbcDTO;
 import com.example.orders.client.AbcServiceClient;
+import com.example.orders.security.SecurityUtils;
 import com.example.orders.service.AbcService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -69,7 +70,8 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public AbcDTO createAbc(AbcDTO abcDTO) {
         try {
-            return abcServiceClient.createAbc(abcDTO);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return abcServiceClient.createAbc(token, abcDTO);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -84,7 +86,8 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public AbcDTO partialUpdateAbc(String id, AbcDTO abcDTO) {
         try {
-            return abcServiceClient.partialUpdateAbc(id, abcDTO);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return abcServiceClient.partialUpdateAbc(token, id, abcDTO);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -99,7 +102,8 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public void deleteAbc(String id) {
         try {
-            abcServiceClient.deleteAbc(id);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            abcServiceClient.deleteAbc(token, id);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -114,7 +118,8 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public List<AbcDTO> getAllAbcs() {
         try {
-            return abcServiceClient.getAllAbcs();
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return abcServiceClient.getAllAbcs(token);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -128,7 +133,8 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public AbcDTO getAbc(String id) {
         try {
-            return abcServiceClient.getAbc(id);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return abcServiceClient.getAbc(token, id);
         }
         catch (NoSuchElementException err) {
             log.info("not found id = {}", id);

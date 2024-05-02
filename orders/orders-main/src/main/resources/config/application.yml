@@ -98,13 +98,13 @@ spring:
 
   task:
     execution:
-      thread-name-prefix: care-easy-task-
+      thread-name-prefix: orders-task-
       pool:
         core-size: 1
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: order-scheduling-
+      thread-name-prefix: orders-scheduling-
       pool:
         size: 2
 

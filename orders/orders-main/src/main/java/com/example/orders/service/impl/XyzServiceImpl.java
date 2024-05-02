@@ -1,6 +1,7 @@
 package com.example.orders.service.impl;
 
 import com.example.orders.client.XyzServiceClient;
+import com.example.orders.security.SecurityUtils;
 import com.example.orders.service.XyzService;
 import com.example.xyz.domain.dto.XyzDTO;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -69,7 +70,8 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public XyzDTO createXyz(XyzDTO xyzDTO) {
         try {
-            return xyzServiceClient.createXyz(xyzDTO);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return xyzServiceClient.createXyz(token, xyzDTO);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -84,7 +86,8 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public XyzDTO partialUpdateXyz(String id, XyzDTO xyzDTO) {
         try {
-            return xyzServiceClient.partialUpdateXyz(id, xyzDTO);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return xyzServiceClient.partialUpdateXyz(token, id, xyzDTO);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -99,7 +102,8 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public void deleteXyz(String id) {
         try {
-            xyzServiceClient.deleteXyz(id);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            xyzServiceClient.deleteXyz(token, id);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -114,7 +118,8 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public List<XyzDTO> getAllXyzs() {
         try {
-            return xyzServiceClient.getAllXyzs();
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return xyzServiceClient.getAllXyzs(token);
         }
         catch (FeignException err) {
             if(err.status() == 401) {
@@ -128,7 +133,8 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public XyzDTO getXyz(String id) {
         try {
-            return xyzServiceClient.getXyz(id);
+            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            return xyzServiceClient.getXyz(token, id);
         }
         catch (NoSuchElementException err) {
             log.info("not found id = {}", id);

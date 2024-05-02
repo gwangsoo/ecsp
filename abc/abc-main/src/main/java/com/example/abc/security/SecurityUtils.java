@@ -32,6 +32,17 @@ public final class SecurityUtils {
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
     }
 
+    /**
+     * Get the login of the current user.
+     *
+     * @return the login of the current user.
+     */
+    public static Optional<String> getCurrentUserToken() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        JwtAuthenticationToken jwt = (JwtAuthenticationToken)securityContext.getAuthentication();
+        return Optional.of(jwt != null && jwt.getToken() != null ? jwt.getToken().getTokenValue() : null);
+    }
+
     public static Optional<String> getCurrentTenant() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractTenant(securityContext.getAuthentication()));

@@ -41,12 +41,12 @@ public class SecurityConfiguration {
 
         http
             .cors(withDefaults())
-            .csrf(csrf ->
-                csrf
-                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                    // See https://stackoverflow.com/q/74447118/65681
-                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-            )
+//            .csrf(csrf ->
+//                csrf
+//                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                    // See https://stackoverflow.com/q/74447118/65681
+//                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+//            )
 //            .addFilterAfter(new CookieCsrfFilter(), BasicAuthenticationFilter.class)
             .authorizeHttpRequests(authz ->
                 // prettier-ignore
@@ -62,7 +62,7 @@ public class SecurityConfiguration {
                     // TODO authenticated 로 바꿀것!!
                     .requestMatchers(mvc.pattern("/v3/api-docs/**")).permitAll()
                     .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/api/**")).permitAll()
+                    .requestMatchers(mvc.pattern("/api/**")).authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2
                 .authenticationManagerResolver(authenticationManagerResolver))

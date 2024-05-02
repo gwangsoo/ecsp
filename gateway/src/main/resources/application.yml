@@ -28,6 +28,9 @@ logout-success-url: "/main/MainPage"
 spring:
   application:
     name: gateway
+  profiles:
+    include: management
+
 # http://localhost:9080/realms/careeasy/well-known/openid-configuration
 #  security.oauth2.resourceserver.jwt.jwk-set-uri: http://${app.auth-server}:9000/.well-known/jwks.json
   security:
@@ -69,19 +72,10 @@ spring:
         pool:
           max-connections: 1000
       routes:
-        - id: admin
+        - id: bff
           uri: http://localhost:8091
           predicates:
-            - Path=/services/bff/admin/**
-        - id: app
-          uri: http://localhost:8092
-          predicates:
-            - Path=/services/bff/app/**
-        - id: cci
-          uri: http://localhost:8093
-          predicates:
-            - Path=/services/bff/cci/**
-
+            - Path=/services/bff/**
         - id: abc
           uri: http://localhost:8082
           predicates:

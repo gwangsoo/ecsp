@@ -1,0 +1,225 @@
+server:
+  port: ${PORT:8091}
+  shutdown: graceful
+  servlet:
+    context-path: /services/bff
+    session:
+      cookie:
+        secure: true
+        http-only: true
+
+logging:
+  level:
+    ROOT: DEBUG
+    com.example.bff: DEBUG
+
+spring:
+  application:
+    name: bff
+  profiles:
+    include: springdoc, management
+  autoconfigure:
+    exclude:
+      org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
+
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+  jmx:
+    enabled: false
+
+  messages:
+    basename: i18n/messages
+
+  main:
+    allow-bean-definition-overriding: true
+
+  webflux:
+    problemdetails:
+      enabled: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    problemdetails:
+      enabled: true
+
+  task:
+    execution:
+      thread-name-prefix: bff-task-
+      pool:
+        core-size: 2
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: bff-scheduling-
+      pool:
+        size: 2
+
+  output:
+    ansi:
+      console-available: true
+
+  security:
+    oauth2:
+      client:
+        provider:
+          adminapp:
+            issuer-uri: https://auth.xr-friends.com/ev/realms/example
+        registration:
+          adminapp:
+            client-id: adminapp
+            client-secret: adminapp
+            scope: openid, profile, email, offline_access # last one for refresh tokens
+
+#  servlet:
+#    multipart:
+#      enabled: true
+#      location: ${files.upload.path}
+#      max-file-size: 256MB
+#      max-request-size: 256MB
+#      strict-servlet-compliance: true
+
+application:
+  clientApp:
+    name: 'bff'
+  # By default CORS is disabled. Uncomment to enable.
+  # cors:
+  #   allowed-origins: "http://localhost:8100,http://localhost:9000"
+  #   allowed-methods: "*"
+  #   allowed-headers: "*"
+  #   exposed-headers: "Authorization,Link,X-Total-Count,X-${application.clientApp.name}-alert,X-${application.clientApp.name}-error,X-${application.clientApp.name}-params"
+  #   allow-credentials: true
+  #   max-age: 1800
+  mail:
+    from: bff@localhost
+  security:
+    oauth2:
+      audience:
+        - adminapp
+      issuers:
+        - https://auth.xr-friends.com/ev/realms/example
+
+# Properties to be exposed on the /info management endpoint
+info:
+  # Comma separated list of profiles that will trigger the ribbon to show
+  version: 'dev'
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.bff.exception.BadRequestAlertException
+    shared:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 30
+      waitDurationInOpenState: 1s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      ignoreExceptions:
+        - com.example.bff.exception.BadRequestAlertException
+  instances:
+    ordersService:
+      baseConfig: default
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
+      baseConfig: default
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 100
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.bff.exception.BadRequestAlertException
+  instances:
+    ordersService:
+      baseConfig: default
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
+      baseConfig: default
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 100
+  instances:
+    ordersService:
+      baseConfig: default
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
+      baseConfig: default
+
+resilience4j.thread-pool-bulkhead:
+  configs:
+    default:
+      maxThreadPoolSize: 4
+      coreThreadPoolSize: 2
+      queueCapacity: 2
+  instances:
+    ordersService:
+      baseConfig: default
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
+      baseConfig: default
+
+resilience4j.ratelimiter:
+  configs:
+    default:
+      registerHealthIndicator: false
+      limitForPeriod: 10
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0
+      eventConsumerBufferSize: 100
+  instances:
+    ordersService:
+      baseConfig: default
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
+      baseConfig: default
+
+resilience4j.timelimiter:
+  configs:
+    default:
+      cancelRunningFuture: false
+      timeoutDuration: 2s
+  instances:
+    ordersService:
+      baseConfig: default
+    abcServiceClient:
+      baseConfig: default
+    xyzServiceClient:
+      baseConfig: default
+
+client:
+  abcService:
+    name: abcServiceClient
+    uri: http://localhost:8082
+  xyzService:
+    name: xyzServiceClient
+    uri: http://localhost:8083
+  ordersService:
+    name: ordersServiceClient
+    uri: http://localhost:8084
+
