@@ -21,7 +21,9 @@ import io.github.resilience4j.feign.FeignDecorators;
 import io.github.resilience4j.feign.Resilience4jFeign;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,7 +72,7 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public AbcDTO createAbc(AbcDTO abcDTO) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return abcServiceClient.createAbc(token, abcDTO);
         }
         catch (FeignException err) {
@@ -86,7 +88,7 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public AbcDTO partialUpdateAbc(String id, AbcDTO abcDTO) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return abcServiceClient.partialUpdateAbc(token, id, abcDTO);
         }
         catch (FeignException err) {
@@ -102,7 +104,7 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public void deleteAbc(String id) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             abcServiceClient.deleteAbc(token, id);
         }
         catch (FeignException err) {
@@ -118,7 +120,7 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public List<AbcDTO> getAllAbcs() {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return abcServiceClient.getAllAbcs(token);
         }
         catch (FeignException err) {
@@ -133,7 +135,7 @@ public class AbcServiceImpl implements AbcService {
     @Override
     public AbcDTO getAbc(String id) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return abcServiceClient.getAbc(token, id);
         }
         catch (NoSuchElementException err) {

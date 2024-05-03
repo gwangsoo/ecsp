@@ -1,11 +1,15 @@
 package com.example.bff.web.rest;
 
+import com.example.bff.security.SecurityUtils;
 import com.example.orders.domain.dto.OrdersDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,7 +100,10 @@ public class CompositeResource {
     @GetMapping("")
     public ResponseEntity<List<OrdersDTO>> getAllOrders(
             @RequestParam(value = "status") final OrdersDTO.OrdersStatus status) {
-        log.debug("REST request to get all Orderss");
+        log.debug("REST request to get all Orders");
+        log.debug("request={}", ReactiveSecurityContextHolder.getContext()
+                .map(SecurityContext::getAuthentication).block());
+        log.debug("getAllOrders={}", SecurityUtils.getCurrentUserToken().block());
         return ResponseEntity.ok(ordersService.getAllOrders(status));
     }
 //            @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)

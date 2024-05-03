@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerReactiveAuthenticationManagerResolver;
 import org.springframework.security.oauth2.server.resource.authentication.JwtReactiveAuthenticationManager;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
 import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
@@ -56,7 +58,8 @@ public class SecurityConfiguration {
             .httpBasic(x -> x.disable())
             .anonymous(x -> x.disable())
             .logout(x -> x.disable())
-            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+//            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+            .securityContextRepository(new WebSessionServerSecurityContextRepository())
             .requestCache(cache -> cache.requestCache(NoOpServerRequestCache.getInstance()))
             .headers(withDefaults())
             .authorizeExchange(authz ->

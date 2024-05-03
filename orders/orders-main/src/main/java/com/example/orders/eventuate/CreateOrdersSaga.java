@@ -6,6 +6,7 @@ import com.example.abc.eventuate.command.AbcRegisterCommand;
 import com.example.orders.domain.dto.OrdersDTO;
 import com.example.orders.domain.entity.Orders;
 import com.example.orders.repository.OrdersRepository;
+import com.example.orders.security.SecurityUtils;
 import com.example.orders.service.AbcService;
 import com.example.orders.service.XyzService;
 import com.example.xyz.domain.dto.XyzDTO;
@@ -70,6 +71,7 @@ public class CreateOrdersSaga implements SimpleSaga<Orders> {
     public void handleAbcReply(Orders data, AbcDTO reply) {
         log.info("data = {}", data);
         log.info("reply = {}", reply);
+        log.debug("handleAbcReply() token={}", SecurityUtils.getCurrentUserToken());
 
         AbcDTO abcDTO = abcService.getAbc(reply.getId());
 

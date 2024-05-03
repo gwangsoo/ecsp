@@ -70,7 +70,7 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public XyzDTO createXyz(XyzDTO xyzDTO) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return xyzServiceClient.createXyz(token, xyzDTO);
         }
         catch (FeignException err) {
@@ -86,7 +86,7 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public XyzDTO partialUpdateXyz(String id, XyzDTO xyzDTO) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return xyzServiceClient.partialUpdateXyz(token, id, xyzDTO);
         }
         catch (FeignException err) {
@@ -102,7 +102,7 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public void deleteXyz(String id) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             xyzServiceClient.deleteXyz(token, id);
         }
         catch (FeignException err) {
@@ -118,7 +118,7 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public List<XyzDTO> getAllXyzs() {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return xyzServiceClient.getAllXyzs(token);
         }
         catch (FeignException err) {
@@ -133,7 +133,7 @@ public class XyzServiceImpl implements XyzService {
     @Override
     public XyzDTO getXyz(String id) {
         try {
-            String token = SecurityUtils.getCurrentUserToken().orElse(null);
+            String token = SecurityUtils.getCurrentUserToken().orElse("");
             return xyzServiceClient.getXyz(token, id);
         }
         catch (NoSuchElementException err) {

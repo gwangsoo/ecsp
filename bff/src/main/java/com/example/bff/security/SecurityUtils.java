@@ -45,7 +45,22 @@ public final class SecurityUtils {
 //        String extractPrincipal = extractPrincipal(auth);
         return ReactiveSecurityContextHolder.getContext()
                 .map(SecurityContext::getAuthentication)
-                .flatMap(authentication -> Mono.justOrEmpty(extractPrincipal(authentication)));
+                .flatMap(authentication -> Mono.justOrEmpty(extractToken(authentication)));
+    }
+
+    private static String extractToken(Authentication authentication) {
+        if (authentication == null) {
+            return null;
+        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
+            return "";
+        } else if (authentication instanceof JwtAuthenticationToken) {
+            return ((JwtAuthenticationToken) authentication).getToken().getTokenValue();
+        } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {
+            return ((DefaultOidcUser) authentication.getPrincipal()).getIdToken().getTokenValue();
+        } else if (authentication.getPrincipal() instanceof String s) {
+            return "";
+        }
+        return null;
     }
 
     private static String extractPrincipal(Authentication authentication) {
