@@ -1,0 +1,80 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.example.ecsp'
+version = '0.0.1-RELEASE'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenLocal()
+	maven {
+		credentials {
+			username 'xrf'
+			password 'xrf!!00'
+		}
+		url "https://nexus.xr-friends.com/repository/maven-releases/"
+	}
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.projectlombok:lombok'
+
+	implementation "com.example.ecsp:common:0.0.1-RELEASE"
+	implementation 'com.example.ecsp:orders-share:0.0.1-RELEASE'
+	implementation 'com.example.ecsp:abc-share:0.0.1-RELEASE'
+	implementation 'com.example.ecsp:xyz-share:0.0.1-RELEASE'
+
+//	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation "org.springframework.boot:spring-boot-starter-aop"
+//	implementation "org.springframework.boot:spring-boot-starter-logging"
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+//	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+	// openfeign _ resilience4j
+	implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jVersion}"
+	implementation "io.github.resilience4j:resilience4j-all:${resilience4jVersion}"
+	implementation "io.github.resilience4j:resilience4j-feign:${resilience4jVersion}"
+	implementation "io.github.openfeign:feign-core:${openfeignVersion}"
+	implementation "io.github.openfeign:feign-jackson:${openfeignVersion}"
+	implementation "io.github.openfeign:feign-httpclient:${openfeignVersion}"
+
+	implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${openapiVersion}"
+
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+
+	OperatingSystem os = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem();
+	Architecture arch = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentArchitecture();
+	if (os.isMacOsX() && !arch.isAmd64()) {
+		implementation("io.netty:netty-resolver-dns-native-macos") {
+			artifact {
+				classifier = "osx-aarch_64"
+			}
+		}
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
