@@ -7,15 +7,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static com.example.bff.security.SecurityUtils.extractToken;
 
 /**
  * REST controller for managing composite.
@@ -98,11 +102,13 @@ public class CompositeResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<OrdersDTO>> getAllOrders(
-            @RequestParam(value = "status") final OrdersDTO.OrdersStatus status) {
+    public ResponseEntity<List<OrdersDTO>> getAllOrders(Authentication authentication,
+                                                        @RequestParam(value = "status") final OrdersDTO.OrdersStatus status) {
+        log.info("CHECKER = {}", extractToken(authentication));
         log.debug("REST request to get all Orders");
         log.debug("request={}", ReactiveSecurityContextHolder.getContext()
                 .map(SecurityContext::getAuthentication).block());
+        log.debug("request2={}", SecurityContextHolder.getContext().getAuthentication());
         log.debug("getAllOrders={}", SecurityUtils.getCurrentUserToken().block());
         return ResponseEntity.ok(ordersService.getAllOrders(status));
     }
