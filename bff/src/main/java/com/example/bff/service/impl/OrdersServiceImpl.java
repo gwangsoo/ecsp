@@ -117,6 +117,7 @@ public class OrdersServiceImpl implements OrdersService {
     public List<OrdersDTO> getAllOrders(OrdersDTO.OrdersStatus status) {
         try {
             String token = SecurityUtils.getCurrentUserToken().block();
+            log.info("ORDER TOKEN CHECK - {}", token);
             return ordersServiceClient.getAllOrders(token, status);
         }
         catch (FeignException err) {

@@ -114,10 +114,11 @@ public class AbcServiceImpl implements AbcService {
     }
 
     @Override
-    public List<AbcDTO> getAllAbcs() {
+    public List<AbcDTO> getAllAbcs(AbcDTO.AbcStatus status) {
         try {
             String token = SecurityUtils.getCurrentUserToken().block();
-            return abcServiceClient.getAllAbcs(token);
+            log.info("ABC TOKEN CHECK - {}", token);
+            return abcServiceClient.getAllAbcs(token, status);
         }
         catch (FeignException err) {
             if(err.status() == 401) {

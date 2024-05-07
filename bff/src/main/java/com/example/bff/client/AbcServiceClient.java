@@ -21,9 +21,9 @@ public interface AbcServiceClient {
     @Headers("Content-Type: application/json")
     void deleteAbc(@Param("oidcToken") String oidcToken, @Param("id") String id);
 
-    @RequestLine("GET /services/abc/api/abcs")
+    @RequestLine("GET /services/abc/api/abcs?status={status}")
     @Headers("Content-Type: application/json")
-    List<AbcDTO> getAllAbcs(@Param("oidcToken") String oidcToken);
+    List<AbcDTO> getAllAbcs(@Param("oidcToken") String oidcToken, @Param("status") AbcDTO.AbcStatus status);
 
     @RequestLine("GET /services/abc/api/abcs/{id}")
     @Headers("Content-Type: application/json")

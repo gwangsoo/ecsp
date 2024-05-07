@@ -21,9 +21,9 @@ public interface XyzServiceClient {
     @Headers("Content-Type: application/json")
     void deleteXyz(@Param("oidcToken") String oidcToken, @Param("id") String id);
 
-    @RequestLine("GET /services/xyz/api/xyzs")
+    @RequestLine("GET /services/xyz/api/xyzs?attrValue={attrValue}&status={status}")
     @Headers("Content-Type: application/json")
-    List<XyzDTO> getAllXyzs(@Param("oidcToken") String oidcToken);
+    List<XyzDTO> getAllXyzs(@Param("oidcToken") String oidcToken, @Param("attrValue") String attrValue, @Param("status") XyzDTO.XyzStatus status);
 
     @RequestLine("GET /services/xyz/api/xyzs/{id}")
     @Headers("Content-Type: application/json")

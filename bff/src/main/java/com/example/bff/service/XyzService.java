@@ -9,6 +9,6 @@ public interface XyzService {
     XyzDTO createXyz(XyzDTO xyzDTO);
     XyzDTO partialUpdateXyz(String id, XyzDTO xyzDTO);
     void deleteXyz(String id);
-    List<XyzDTO> getAllXyzs();
+    List<XyzDTO> getAllXyzs(String attrValue, XyzDTO.XyzStatus status);
     XyzDTO getXyz(String id);
 }

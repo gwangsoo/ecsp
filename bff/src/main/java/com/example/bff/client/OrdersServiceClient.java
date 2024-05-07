@@ -21,9 +21,9 @@ public interface OrdersServiceClient {
     @Headers("Content-Type: application/json")
     void deleteOrders(@Param("oidcToken") String oidcToken, @Param("id") String id);
 
-    @RequestLine("GET /services/orders/api/orders")
+    @RequestLine("GET /services/orders/api/orders?status={status}")
     @Headers("Content-Type: application/json")
-    List<OrdersDTO> getAllOrders(@Param("oidcToken") String oidcToken, OrdersDTO.OrdersStatus status);
+    List<OrdersDTO> getAllOrders(@Param("oidcToken") String oidcToken, @Param("status") OrdersDTO.OrdersStatus status);
 
     @RequestLine("GET /services/orders/api/orders/{id}")
     @Headers("Content-Type: application/json")

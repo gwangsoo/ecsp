@@ -114,10 +114,11 @@ public class XyzServiceImpl implements XyzService {
     }
 
     @Override
-    public List<XyzDTO> getAllXyzs() {
+    public List<XyzDTO> getAllXyzs(String attrValue, XyzDTO.XyzStatus status) {
         try {
             String token = SecurityUtils.getCurrentUserToken().block();
-            return xyzServiceClient.getAllXyzs(token);
+            log.info("XYZ TOKEN CHECK - {}", token);
+            return xyzServiceClient.getAllXyzs(token, attrValue, status);
         }
         catch (FeignException err) {
             if(err.status() == 401) {

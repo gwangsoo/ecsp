@@ -1,25 +1,21 @@
 package com.example.bff.web.rest;
 
-import com.example.bff.security.SecurityUtils;
+import com.example.abc.domain.dto.AbcDTO;
+import com.example.bff.service.AsyncTestService;
 import com.example.orders.domain.dto.OrdersDTO;
+import com.example.xyz.domain.dto.XyzDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static com.example.bff.security.SecurityUtils.extractToken;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * REST controller for managing composite.
@@ -39,6 +35,8 @@ public class CompositeResource {
     private final com.example.bff.service.OrdersService ordersService;
     private final com.example.bff.service.AbcService abcService;
     private final com.example.bff.service.XyzService xyzService;
+
+    private final AsyncTestService asyncTestService;
 
 //    /**
 //     * {@code POST  /orders} : Create a new orders.
@@ -102,16 +100,41 @@ public class CompositeResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<OrdersDTO>> getAllOrders(Authentication authentication,
-                                                        @RequestParam(value = "status") final OrdersDTO.OrdersStatus status) {
-        log.info("CHECKER = {}", extractToken(authentication));
-        log.debug("REST request to get all Orders");
-        log.debug("request={}", ReactiveSecurityContextHolder.getContext()
-                .map(SecurityContext::getAuthentication).block());
-        log.debug("request2={}", SecurityContextHolder.getContext().getAuthentication());
-        log.debug("getAllOrders={}", SecurityUtils.getCurrentUserToken().block());
-        return ResponseEntity.ok(ordersService.getAllOrders(status));
+    public ResponseEntity<CompositeDto> getAllOrders(@RequestParam(value = "status") final OrdersDTO.OrdersStatus status) {
+//        log.debug("request={}", ReactiveSecurityContextHolder.getContext()
+//                .map(SecurityContext::getAuthentication).block());
+
+        // 병렬 호출 테스트
+        CompletableFuture<List<OrdersDTO>> ordersResult = asyncTestService.getOrdersDTOList(status);
+        CompletableFuture<List<AbcDTO>> abcResult = asyncTestService.getAbcDTOList(AbcDTO.AbcStatus.OPEN);
+        CompletableFuture<List<XyzDTO>> xyzResult = asyncTestService.getXyzDTOList("1", XyzDTO.XyzStatus.STANDBY);
+
+        CompletableFuture<CompositeDto> compositeResult = ordersResult.thenCombine(abcResult, (orders, abc) -> {
+            CompositeDto compositeDto = new CompositeDto();
+            compositeDto.setOrdersDTOList(orders);
+            compositeDto.setAbcDTOList(abc);
+            return compositeDto;
+        }).thenCombine(xyzResult, (compositeDto, xyz) -> {
+            compositeDto.setXyzDTOList(xyz);
+            return compositeDto;
+        });
+
+        CompositeDto result = compositeResult.join();
+        log.info("composite result ={}", result);
+        return ResponseEntity.ok(result);
     }
+
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    public static class CompositeDto {
+        private List<OrdersDTO> ordersDTOList;
+        private List<AbcDTO> abcDTOList;
+        private List<XyzDTO> xyzDTOList;
+    }
+
+
 //            @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)
 //            Pageable pageable) {
 //        log.debug("REST request to get all Orderss");

@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -43,9 +44,10 @@ public final class SecurityUtils {
 //        SecurityContext ctx = ReactiveSecurityContextHolder.getContext().block();
 //        Authentication auth = ctx.getAuthentication();
 //        String extractPrincipal = extractPrincipal(auth);
-        return ReactiveSecurityContextHolder.getContext()
-                .map(SecurityContext::getAuthentication)
-                .flatMap(authentication -> Mono.justOrEmpty(extractToken(authentication)));
+//        return ReactiveSecurityContextHolder.getContext()
+//                .map(SecurityContext::getAuthentication)
+//                .flatMap(authentication -> Mono.justOrEmpty(extractToken(authentication)));
+        return Mono.justOrEmpty(extractToken(SecurityContextHolder.getContext().getAuthentication()));
     }
 
     public static String extractToken(Authentication authentication) {

@@ -9,6 +9,6 @@ public interface AbcService {
     AbcDTO createAbc(AbcDTO abcDTO);
     AbcDTO partialUpdateAbc(String id, AbcDTO abcDTO);
     void deleteAbc(String id);
-    List<AbcDTO> getAllAbcs();
+    List<AbcDTO> getAllAbcs(AbcDTO.AbcStatus status);
     AbcDTO getAbc(String id);
 }

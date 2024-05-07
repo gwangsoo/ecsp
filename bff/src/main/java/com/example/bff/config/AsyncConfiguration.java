@@ -35,7 +35,8 @@ public class AsyncConfiguration implements AsyncConfigurer {
         executor.setMaxPoolSize(taskExecutionProperties.getPool().getMaxSize());
         executor.setQueueCapacity(taskExecutionProperties.getPool().getQueueCapacity());
         executor.setThreadNamePrefix(taskExecutionProperties.getThreadNamePrefix());
-//        executor.setTaskDecorator(runnable -> new DelegatingSecurityContextRunnable(runnable));
+        // https://docs.spring.io/spring-security/reference/features/integrations/concurrency.html 참고
+        executor.setTaskDecorator(DelegatingSecurityContextRunnable::new);
         return new ExceptionHandlingAsyncTaskExecutor(executor);
     }
 
