@@ -1,12 +1,16 @@
 package com.example.bfi.domain.entity;
 
-import jakarta.validation.constraints.*;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-
+import com.example.bfi.domain.dto.enumeration.ConnectorFormat;
+import com.example.bfi.domain.dto.enumeration.ConnectorType;
+import com.example.bfi.domain.dto.enumeration.PowerType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * 컨넥터
@@ -26,6 +30,15 @@ public class Connector implements Serializable {
     @Id
     private String id;
 
+    @Field("connectorType")
+    private ConnectorType connectorType;
+
+    @Field("format")
+    private ConnectorFormat format;
+
+    @Field("power_type")
+    private PowerType powerType;
+
     @Field("max_voltage")
     private Integer maxVoltage;
 
@@ -39,11 +52,11 @@ public class Connector implements Serializable {
     @Field("tariff_ids")
     private String tariffIds;
 
-    @Field("last_updated")
-    private ZonedDateTime lastUpdated;
+    @Size(max = 255)
+    @Field("terms_and_conditions")
+    private String termsAndConditions;
 
-//    @DBRef
-//    @Field("evse")
-//    @JsonIgnoreProperties(value = { "connectors", "location" }, allowSetters = true)
-//    private Evse evse;
+    @Field("last_updated")
+    private Instant lastUpdated;
+
 }
