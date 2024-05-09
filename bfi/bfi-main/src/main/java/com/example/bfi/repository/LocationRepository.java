@@ -1,11 +1,8 @@
 package com.example.bfi.repository;
 
 import com.example.bfi.domain.entity.Location;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.mongodb.repository.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
@@ -17,7 +14,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface LocationRepository extends MongoRepository<Location, String> {
+public interface LocationRepository extends MongoRepository<Location, String>{
     /**
      * @param countryCode
      * @param partyId

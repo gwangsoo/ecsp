@@ -1,15 +1,18 @@
 package com.example.bfi.domain.entity;
 
+import com.example.bfi.domain.dto.enumeration.EvseCapability;
 import com.example.bfi.domain.dto.enumeration.EvseStatus;
-import jakarta.validation.constraints.*;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.example.bfi.domain.dto.enumeration.ParkingRestriction;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 충전기
@@ -39,21 +42,39 @@ public class Evse implements Serializable {
     @Field("status")
     private EvseStatus status;
 
-    @Size(max = 256)
-    @Field("directions")
-    private String directions;
-
-    @Field("last_updated")
-    private ZonedDateTime lastUpdated;
+    @Field("status_schedule")
+    private StatusSchedule statusSchedule;
 
     @Builder.Default
-//    @DBRef
+    @Field("capabilities")
+    private Set<EvseCapability>  evseCapability = new HashSet<>();
+
+    @Builder.Default
     @Field("connector")
-//    @JsonIgnoreProperties(value = { "evse" }, allowSetters = true)
     private Set<Connector> connectors = new HashSet<>();
 
-//    @DBRef
-//    @Field("location")
-//    @JsonIgnoreProperties(value = { "evses" }, allowSetters = true)
-//    private Location location;
+    @Size(max = 4)
+    @Field("floor_level")
+    private String floorLevel;
+
+    @Field("coordinates")
+    private GeoLocation coordinates;
+
+    @Size(max = 16)
+    @Field("physical_reference")
+    private String physicalReference;
+
+    @Builder.Default
+    @Field("directions")
+    private Set<DisplayText> directions = new HashSet<>();
+
+    @Field("parking_restrictions")
+    private ParkingRestriction parkingRestriction;
+
+    @Builder.Default
+    @Field("images")
+    private Set<Image> images = new HashSet<>();
+
+    @Field("last_updated")
+    private Instant lastUpdated;
 }
