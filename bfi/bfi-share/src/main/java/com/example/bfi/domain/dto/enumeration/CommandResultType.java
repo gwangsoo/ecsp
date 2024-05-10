@@ -1,6 +1,7 @@
 package com.example.bfi.domain.dto.enumeration;
 
 /**
+ * Commands 모듈
  * CommandResultType
  */
 public enum CommandResultType {
