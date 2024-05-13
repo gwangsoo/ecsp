@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service Interface for managing {@link com.example.bfi.domain.entity.Location}.
+ * Service Interface for managing {@link com.example.bfi.domain.entity.Tariff}.
  */
 public interface TariffService {
     /**
-     * Save a location.
+     * Save a version.
      *
      * @param TariffDTO the entity to save.
      * @return the persisted entity.
@@ -19,7 +19,7 @@ public interface TariffService {
     TariffDTO save(TariffDTO TariffDTO);
 
     /**
-     * Updates a location.
+     * Updates a version.
      *
      * @param TariffDTO the entity to update.
      * @return the persisted entity.
@@ -27,7 +27,7 @@ public interface TariffService {
     TariffDTO update(TariffDTO TariffDTO);
 
     /**
-     * Partially updates a location.
+     * Partially updates a version.
      *
      * @param TariffDTO the entity to update partially.
      * @return the persisted entity.
@@ -35,14 +35,14 @@ public interface TariffService {
     Optional<TariffDTO> partialUpdate(TariffDTO TariffDTO);
 
     /**
-     * Get all the locations.
+     * Get all the versions.
      *
      * @return the list of entities.
      */
     List<TariffDTO> findAll(String countryCode, String partyId, ZonedDateTime dateFrom, ZonedDateTime dateTo, Integer offset, Integer limit);
 
     /**
-     * Get the "id" location.
+     * Get the "id" version.
      *
      * @param id the id of the entity.
      * @return the entity.
@@ -50,7 +50,7 @@ public interface TariffService {
     Optional<TariffDTO> findOne(String id);
 
     /**
-     * Delete the "id" location.
+     * Delete the "id" version.
      *
      * @param id the id of the entity.
      */
