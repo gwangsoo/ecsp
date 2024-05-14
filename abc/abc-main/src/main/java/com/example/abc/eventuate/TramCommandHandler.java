@@ -1,10 +1,8 @@
 package com.example.abc.eventuate;
 
-import com.example.abc.domain.dto.AbcDTO;
 import com.example.abc.eventuate.command.AbcRegisterCommand;
 import com.example.abc.eventuate.command.ConfirmAbcCommand;
-import com.example.abc.exception.BadRequestAlertException;
-import com.example.abc.service.AbcService;
+import com.example.ecsp.common.jpa.TenantContext;
 import io.eventuate.tram.commands.consumer.CommandHandlers;
 import io.eventuate.tram.commands.consumer.CommandHandlersBuilder;
 import io.eventuate.tram.commands.consumer.CommandMessage;
@@ -27,7 +25,7 @@ public class TramCommandHandler {
     }
 
     @Autowired
-    private AbcService abcService;
+    private EventuateHandlerService eventuateHandlerService;
 
     public CommandHandlers getCommandHandlers() {
         return CommandHandlersBuilder
@@ -40,9 +38,13 @@ public class TramCommandHandler {
     @Transactional
     public Message abcRegister(CommandMessage<AbcRegisterCommand> cm, PathVariables pvs) {
         log.info("abcRegister messageId = " + cm.getMessageId());
+        log.info("abcRegister tenant = " + cm.getMessage().getHeader("tenant"));
 
         try {
-            return withSuccess(abcService.save(cm.getCommand().getAbc()));
+            // tenant 설정
+            TenantContext.setCurrentTenant(cm.getMessage().getHeader("tenant").orElse(null));
+
+            return withSuccess(eventuateHandlerService.abcRegister(cm.getCommand().getAbc()));
         } catch (Exception e) {
             return withFailure();
         }
@@ -51,12 +53,13 @@ public class TramCommandHandler {
     @Transactional
     public Message confirmAbc(CommandMessage<ConfirmAbcCommand> cm, PathVariables pvs) {
         log.info("confirmAbc messageId = " + cm.getMessageId());
+        log.info("confirmAbc tenant = " + cm.getMessage().getHeader("tenant"));
 
         try {
-            AbcDTO abcDto = abcService.findOne(cm.getCommand().getAbc().getId()).orElseThrow();
-            if(abcDto.getStatus() != AbcDTO.AbcStatus.OPEN) {
-                throw new BadRequestAlertException("유효한 데이터가 아님", AbcDTO.class.getName(), "idnull");
-            }
+            // tenant 설정
+            TenantContext.setCurrentTenant(cm.getMessage().getHeader("tenant").orElse(null));
+
+            eventuateHandlerService.confirmAbc(cm.getCommand().getAbc());
             return withSuccess();
         } catch (Exception e) {
             return withFailure(e);

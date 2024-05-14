@@ -9,6 +9,7 @@ import com.example.abc.eventuate.event.AbcUpdateEvent;
 import com.example.abc.repository.AbcRepository;
 import com.example.abc.service.AbcService;
 import com.example.abc.service.mapper.AbcMapper;
+import com.example.ecsp.common.jpa.TenantContext;
 import com.example.ecsp.common.util.JsonUtil;
 import com.example.xyz.domain.dto.XyzDTO;
 import com.example.xyz.domain.dto.XyzDetailDTO;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -58,7 +60,7 @@ public class AbcServiceImpl implements AbcService {
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new AbcInsertEvent(result);
-        domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
         // 등록시 다른 서비스에 Command를 실행해야 하는 경우
         commandProducer.send(XyzTramMessageConfig.commandChannel,
@@ -69,7 +71,7 @@ public class AbcServiceImpl implements AbcService {
                         .xyzDetails(Set.of(XyzDetailDTO.builder().attrName("data").attrValue(abc.getData()).build()))
                         .build()),
                 AbcTramMessageConfig.replyChannel,
-                Collections.emptyMap() // header
+                Map.of("tenant", TenantContext.getCurrentTenant().orElse("")) // header
         );
 
         return result;
@@ -84,7 +86,7 @@ public class AbcServiceImpl implements AbcService {
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new AbcUpdateEvent(result);
-        domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
         return result;
     }
@@ -100,7 +102,7 @@ public class AbcServiceImpl implements AbcService {
 
                 // 도메인 이벤트 저장
                 DomainEvent domainEvent = new AbcUpdateEvent(abcMapper.toDto(existingAbc));
-                domainEventPublisher.publish(Abc.class.getName(), existingAbc.getId(), Collections.singletonList(domainEvent));
+                domainEventPublisher.publish(Abc.class.getName(), existingAbc.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
                 return existingAbc;
             })
@@ -154,7 +156,6 @@ public class AbcServiceImpl implements AbcService {
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new AbcDeleteEvent(abc);
-        domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Collections.singletonList(domainEvent));
-
+        domainEventPublisher.publish(Abc.class.getName(), abc.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
     }
 }

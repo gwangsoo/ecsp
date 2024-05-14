@@ -1,5 +1,6 @@
 package com.example.xyz.service.impl;
 
+import com.example.ecsp.common.jpa.TenantContext;
 import com.example.xyz.domain.dto.XyzDTO;
 import com.example.xyz.domain.entity.Xyz;
 import com.example.xyz.eventuate.event.XyzDeleteEvent;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -52,7 +54,7 @@ public class XyzServiceImpl implements XyzService {
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new XyzInsertEvent(result);
-        domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
         return result;
     }
@@ -66,7 +68,7 @@ public class XyzServiceImpl implements XyzService {
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new XyzUpdateEvent(result);
-        domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
         return result;
     }
@@ -82,7 +84,7 @@ public class XyzServiceImpl implements XyzService {
 
                 // 도메인 이벤트 저장
                 DomainEvent domainEvent = new XyzUpdateEvent(xyzMapper.toDto(existingXyz));
-                domainEventPublisher.publish(Xyz.class.getName(), existingXyz.getId(), Collections.singletonList(domainEvent));
+                domainEventPublisher.publish(Xyz.class.getName(), existingXyz.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
                 return existingXyz;
             })
@@ -138,7 +140,7 @@ public class XyzServiceImpl implements XyzService {
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new XyzDeleteEvent(xyz);
-        domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Xyz.class.getName(), xyz.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
     }
 }

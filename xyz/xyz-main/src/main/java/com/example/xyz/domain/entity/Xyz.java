@@ -4,14 +4,13 @@ import com.example.ecsp.common.jpa.AbstractAuditingEntity;
 import com.example.xyz.domain.dto.XyzDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.TenantId;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -50,4 +49,8 @@ public class Xyz extends AbstractAuditingEntity<String> implements Serializable 
     @org.springframework.data.annotation.Transient
     @JsonIgnoreProperties(value = { "xyz" }, allowSetters = true)
     private Set<XyzDetail> xyzDetails;
+
+    @TenantId
+    @Column(name = "tenant_id", length = 50, updatable = false)
+    private String tenantId;
 }

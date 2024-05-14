@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.TenantId;
 
 import java.io.Serializable;
 
@@ -44,4 +45,8 @@ public class Orders extends AbstractAuditingEntity<String> implements Serializab
 //    @Comment("상태 (OPEN/CLOSE)")
 //    @ColumnDefault("OPEN")
     private OrdersDTO.OrdersStatus status;
+
+    @TenantId
+    @Column(name = "tenant_id", length = 50, updatable = false)
+    private String tenantId;
 }

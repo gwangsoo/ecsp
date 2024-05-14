@@ -1,5 +1,6 @@
 package com.example.xyz.eventuate;
 
+import com.example.ecsp.common.jpa.TenantContext;
 import com.example.xyz.eventuate.command.XyzRegisterCommand;
 import com.example.xyz.service.XyzService;
 import io.eventuate.tram.commands.consumer.CommandHandlers;
@@ -24,7 +25,7 @@ public class TramCommandHandler {
     }
 
     @Autowired
-    private XyzService xyzService;
+    private EventuateHandlerService eventuateHandlerService;
 
     public CommandHandlers getCommandHandlers() {
         return CommandHandlersBuilder
@@ -36,9 +37,14 @@ public class TramCommandHandler {
     @Transactional
     public Message xyzRegister(CommandMessage<XyzRegisterCommand> cm, PathVariables pvs) {
         log.info("xyzRegister messageId = " + cm.getMessageId());
+        log.info("xyzRegister tenant = " + cm.getMessage().getHeader("tenant"));
 
         try {
-            return withSuccess(xyzService.save(cm.getCommand().getXyz()));
+
+            // 테넌트를 설정하고 required_new 로 transaction 설정한 java서비스를 호출 해야 함.
+            TenantContext.setCurrentTenant(cm.getMessage().getHeader("tenant").orElse(null));
+
+            return withSuccess(eventuateHandlerService.xyzRegister(cm.getCommand().getXyz()));
         } catch (Exception e) {
             return withFailure();
         }

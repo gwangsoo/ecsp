@@ -1,7 +1,6 @@
 package com.example.orders.domain.dto;
 
 import com.example.ecsp.common.jpa.AbstractAuditingDTO;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,7 +24,7 @@ public class OrdersDTO extends AbstractAuditingDTO<String> implements Serializab
         APPROVED
     }
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Size(max = 16)
     private String id;
 

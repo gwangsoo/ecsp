@@ -1,7 +1,7 @@
 package com.example.orders.eventuate;
 
+import com.example.ecsp.common.jpa.TenantContext;
 import com.example.orders.domain.dto.OrdersDTO;
-import com.example.orders.domain.entity.Orders;
 import com.example.orders.eventuate.command.OrdersCancelCommand;
 import com.example.orders.eventuate.command.OrdersReceptionCommand;
 import com.example.orders.exception.BadRequestAlertException;
@@ -27,7 +27,7 @@ public class TramCommandHandler {
     }
 
     @Autowired
-    private com.example.orders.service.OrdersService ordersService;
+    private EventuateHandlerService eventuateHandlerService;
 
     public CommandHandlers getCommandHandlers() {
         return CommandHandlersBuilder
@@ -39,10 +39,15 @@ public class TramCommandHandler {
 
     @Transactional
     public Message ordersRegister(CommandMessage<OrdersReceptionCommand> cm, PathVariables pvs) {
+
         log.info("ordersRegister messageId = " + cm.getMessageId());
+        log.info("ordersRegister tenant = " + cm.getMessage().getHeader("tenant"));
 
         try {
-            return withSuccess(ordersService.save(cm.getCommand().getOrders()));
+            // tenant 설정
+            TenantContext.setCurrentTenant(cm.getMessage().getHeader("tenant").orElse(null));
+
+            return withSuccess(eventuateHandlerService.orderRegister(cm.getCommand().getOrders()));
         } catch (Exception e) {
             return withFailure();
         }
@@ -51,12 +56,14 @@ public class TramCommandHandler {
     @Transactional
     public Message confirmOrders(CommandMessage<OrdersCancelCommand> cm, PathVariables pvs) {
         log.info("confirmOrders messageId = " + cm.getMessageId());
+        log.info("confirmOrders tenant = " + cm.getMessage().getHeader("tenant"));
 
         try {
-            OrdersDTO ordersDto = ordersService.findOne(cm.getCommand().getOrders().getId()).orElseThrow();
-            if(ordersDto.getStatus() == OrdersDTO.OrdersStatus.APPROVED) {
-                throw new BadRequestAlertException("유효한 데이터가 아님", OrdersDTO.class.getName(), "idnull");
-            }
+            // tenant 설정
+            TenantContext.setCurrentTenant(cm.getMessage().getHeader("tenant").orElse(null));
+
+            eventuateHandlerService.confirmOrders(cm.getCommand().getOrders());
+
             return withSuccess();
         } catch (Exception e) {
             return withFailure(e);

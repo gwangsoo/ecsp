@@ -1,7 +1,10 @@
 package com.example.abc.tenant;
 
 import com.example.ecsp.common.jpa.TenantAware;
-import jakarta.persistence.*;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PostRemove;
+import jakarta.persistence.PostUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

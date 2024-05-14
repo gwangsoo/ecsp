@@ -1,21 +1,17 @@
 package com.example.orders.web.rest;
 
-import com.example.abc.domain.dto.AbcDTO;
 import com.example.ecsp.common.util.HeaderUtil;
 import com.example.ecsp.common.util.PaginationUtil;
 import com.example.ecsp.common.util.ResponseUtil;
-import com.example.orders.client.AbcServiceClient;
 import com.example.orders.domain.dto.OrdersDTO;
 import com.example.orders.exception.BadRequestAlertException;
 import com.example.orders.repository.OrdersRepository;
-import com.example.orders.security.SecurityUtils;
 import com.example.orders.service.AbcService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +20,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

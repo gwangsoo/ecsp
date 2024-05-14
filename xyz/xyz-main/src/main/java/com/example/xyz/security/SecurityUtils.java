@@ -39,6 +39,7 @@ public final class SecurityUtils {
      */
     public static Optional<String> getCurrentUserToken() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
+        if(securityContext == null) return Optional.empty();
         JwtAuthenticationToken jwt = (JwtAuthenticationToken)securityContext.getAuthentication();
         return Optional.of(jwt != null && jwt.getToken() != null ? jwt.getToken().getTokenValue() : null);
     }
