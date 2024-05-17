@@ -1,14 +1,19 @@
 package com.example.xyz.eventuate;
 
+import com.example.ecsp.common.jpa.TenantContext;
 import io.eventuate.tram.commands.common.ReplyMessageHeaders;
 import io.eventuate.tram.messaging.common.Message;
 import io.eventuate.tram.messaging.consumer.MessageConsumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 
 @Slf4j
 public class TramReplyReceiver {
+
+    @Autowired
+    private EventuateHandlerService eventuateHandlerService;
 
     public TramReplyReceiver(MessageConsumer messageConsumer) {
         messageConsumer.subscribe(XyzTramMessageConfig.commandDispatcherId,
@@ -24,5 +29,9 @@ public class TramReplyReceiver {
 
         log.info("commandReplyType = " + commandReplyType);
         log.info("replyOutcomeType = " + replyOutcomeType);
+
+        // 테넌트를 설정하고 required_new 로 transaction 설정한 java서비스를 호출 해야 함.
+        TenantContext.setCurrentTenant(message.getHeader("tenant").orElse(null));
+
     }
 }

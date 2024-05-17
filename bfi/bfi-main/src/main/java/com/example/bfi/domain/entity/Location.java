@@ -1,15 +1,18 @@
 package com.example.bfi.domain.entity;
 
-import jakarta.validation.constraints.*;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.example.bfi.domain.dto.enumeration.Facility;
+import com.example.bfi.domain.dto.enumeration.ParkingType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 충전소
@@ -40,6 +43,9 @@ public class Location implements Serializable {
     @Field("publish")
     private Boolean publish;
 
+    @Field("publish_allowed_to")
+    private PublishTokenType publishTokenType;
+
     @Size(max = 255)
     @Field("name")
     private String name;
@@ -64,19 +70,52 @@ public class Location implements Serializable {
     @Field("country")
     private String country;
 
-    @Size(max = 255)
-    @Field("time_zone")
-    private String timeZone;
+    @Field("coordinates")
+    private GeoLocation coordinates;
 
-    @Field("charging_when_closed")
-    private Boolean chargingWhenClosed;
+    @Field("related_locations")
+    private AdditionalGeoLocation relatedLocations;
 
-    @Field("last_updated")
-    private ZonedDateTime lastUpdated;
+    @Field("parking_type")
+    private ParkingType parkingType;
 
     @Builder.Default
 //    @DBRef
     @Field("evse")
 //    @JsonIgnoreProperties(value = { "connectors", "location" }, allowSetters = true)
     private Set<Evse> evses = new HashSet<>();
+
+    @Builder.Default
+    @Field("directions")
+    private Set<DisplayText> directions = new HashSet<>();
+
+    @Field("operator")
+    private BusinessDetails operator;
+
+    @Field("suboperator")
+    private BusinessDetails suboperator;
+
+    @Field("owner")
+    private BusinessDetails owner;
+
+    @Field("facilities")
+    private Set<Facility> facilities;
+
+    @Size(max = 255)
+    @Field("time_zone")
+    private String timeZone;
+
+    @Builder.Default
+    @Field("opening_times")
+    private Set<Hours> openingTimes = new HashSet<>();
+
+    @Field("charging_when_closed")
+    private Boolean chargingWhenClosed;
+
+    @Field("energy_mix")
+    private EnergyMix energyMix;
+
+    @Field("last_updated")
+    private Instant lastUpdated;
+
 }

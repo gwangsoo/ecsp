@@ -3,7 +3,6 @@ package com.example.abc.tenant;
 import com.example.abc.security.SecurityUtils;
 import com.example.ecsp.common.jpa.TenantContext;
 import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,6 @@
 package com.example.orders.service.impl;
 
+import com.example.ecsp.common.jpa.TenantContext;
 import com.example.ecsp.common.util.JsonUtil;
 import com.example.orders.domain.dto.OrdersDTO;
 import com.example.orders.domain.entity.Orders;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -54,11 +56,11 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
         log.debug("orders.toJson1 = {}", JsonUtil.toJson(orders));
         log.debug("orders.toJson2 = {}", JSonMapper.toJson(orders));
 
-        sagaInstanceFactory.create(createOrdersSaga, orders);
+        sagaInstanceFactory.create(createOrdersSaga, OrdersDTO);
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new OrdersInsertEvent(result);
-        domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
         return result;
     }
@@ -72,7 +74,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new OrdersUpdateEvent(result);
-        domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
         return result;
     }
@@ -88,7 +90,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
 
                 // 도메인 이벤트 저장
                 DomainEvent domainEvent = new OrdersUpdateEvent(ordersMapper.toDto(existingOrders));
-                domainEventPublisher.publish(Orders.class.getName(), existingOrders.getId(), Collections.singletonList(domainEvent));
+                domainEventPublisher.publish(Orders.class.getName(), existingOrders.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
                 return existingOrders;
             })
@@ -142,7 +144,7 @@ public class OrdersServiceImpl implements com.example.orders.service.OrdersServi
 
         // 도메인 이벤트 저장
         DomainEvent domainEvent = new OrdersDeleteEvent(orders);
-        domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Collections.singletonList(domainEvent));
+        domainEventPublisher.publish(Orders.class.getName(), orders.getId(), Map.of("tenant", TenantContext.getCurrentTenant().orElse("")), Collections.singletonList(domainEvent));
 
     }
 }

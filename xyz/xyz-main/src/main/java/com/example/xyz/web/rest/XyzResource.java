@@ -4,7 +4,6 @@ import com.example.ecsp.common.util.HeaderUtil;
 import com.example.ecsp.common.util.PaginationUtil;
 import com.example.ecsp.common.util.ResponseUtil;
 import com.example.xyz.domain.dto.XyzDTO;
-import com.example.xyz.domain.entity.Xyz;
 import com.example.xyz.exception.BadRequestAlertException;
 import com.example.xyz.repository.XyzRepository;
 import com.example.xyz.service.XyzService;

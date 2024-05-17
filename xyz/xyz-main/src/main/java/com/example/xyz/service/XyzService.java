@@ -1,7 +1,6 @@
 package com.example.xyz.service;
 
 import com.example.xyz.domain.dto.XyzDTO;
-import com.example.xyz.domain.entity.Xyz;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

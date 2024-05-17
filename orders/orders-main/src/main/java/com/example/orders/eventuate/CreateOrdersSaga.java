@@ -3,6 +3,7 @@ package com.example.orders.eventuate;
 import com.example.abc.domain.dto.AbcDTO;
 import com.example.abc.eventuate.AbcTramMessageConfig;
 import com.example.abc.eventuate.command.AbcRegisterCommand;
+import com.example.ecsp.common.jpa.TenantContext;
 import com.example.orders.domain.dto.OrdersDTO;
 import com.example.orders.domain.entity.Orders;
 import com.example.orders.repository.OrdersRepository;
@@ -20,89 +21,111 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 import static io.eventuate.tram.commands.consumer.CommandWithDestinationBuilder.send;
 
 @Transactional
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class CreateOrdersSaga implements SimpleSaga<Orders> {
-    private final OrdersRepository ordersRepository;
+public class CreateOrdersSaga implements SimpleSaga<OrdersDTO> {
 
-    private final AbcService abcService;
-    private final XyzService xyzService;
+    private final EventuateSagaService eventuateSagaService;
 
     @Override
-    public SagaDefinition<Orders> getSagaDefinition() {
+    public SagaDefinition<OrdersDTO> getSagaDefinition() {
         return this.sagaDefinition;
     }
 
-    private SagaDefinition<Orders> sagaDefinition =
+    private SagaDefinition<OrdersDTO> sagaDefinition =
             step()
               .invokeLocal(this::create)
               .withCompensation(this::reject)
             .step()
               .invokeParticipant(this::abcRegisterCommand)
-                .onReply(AbcDTO.class, this::handleAbcReply)
+//                .onReply(AbcDTO.class, this::handleAbcReply)
               .withCompensation(this::abcRegisterCommand4Close)
             .step()
               .invokeParticipant(this::xyzRegisterCommand)
-              .onReply(XyzDTO.class, this::handleXyzReply)
-              .onReply(Exception.class, this::handleAccountException)
+//              .onReply(XyzDTO.class, this::handleXyzReply)
+//              .onReply(Exception.class, this::handleAccountException)
             .step()
               .invokeLocal(this::approve)
             .build()
             ;
 
-    public void create(Orders data) {
-        ordersRepository.save(data);
+    public void create(OrdersDTO data) {
+        log.info("SAGA create tenant={}", TenantContext.getCurrentTenant());
+//        eventuateSagaService.create(data);
     }
 
-    public void reject(Orders data) {
-        ordersRepository.findById(data.getId()).get().setStatus(OrdersDTO.OrdersStatus.REJECTED);
+    public void reject(OrdersDTO data) {
+        log.info("SAGA reject tenant={}", TenantContext.getCurrentTenant());
+        eventuateSagaService.reject(data);
     }
 
-    public CommandWithDestination abcRegisterCommand(Orders data) {
+    public CommandWithDestination abcRegisterCommand(OrdersDTO data) {
+        log.info("SAGA abcRegisterCommand tenant={}", TenantContext.getCurrentTenant());
         return send(new AbcRegisterCommand(AbcDTO.builder().id(data.getId()).data(data.getProductName()).size(data.getSize()).status(AbcDTO.AbcStatus.OPEN).build()))
+                .withExtraHeaders(Map.of("tenant", TenantContext.getCurrentTenant().orElse("")))
                 .to(AbcTramMessageConfig.commandChannel)
                 .build();
     }
 
-    public void handleAbcReply(Orders data, AbcDTO reply) {
+    public void handleAbcReply(OrdersDTO data, AbcDTO reply) {
+        log.info("SAGA handleAbcReply tenant={}", TenantContext.getCurrentTenant());
         log.info("data = {}", data);
         log.info("reply = {}", reply);
         log.debug("handleAbcReply() token={}", SecurityUtils.getCurrentUserToken());
 
-        AbcDTO abcDTO = abcService.getAbc(reply.getId());
-
-        log.info("abcDTO = {}", abcDTO);
+        try {
+            AbcDTO abcDTO = eventuateSagaService.handleAbcReply(reply);
+            log.info("abcDTO = {}", abcDTO);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
-    public CommandWithDestination abcRegisterCommand4Close(Orders data) {
+    public CommandWithDestination abcRegisterCommand4Close(OrdersDTO data) {
+        log.info("SAGA abcRegisterCommand4Close tenant={}", TenantContext.getCurrentTenant());
         return send(new AbcRegisterCommand(AbcDTO.builder().id(data.getId()).data(data.getProductName()).size(data.getSize()).status(AbcDTO.AbcStatus.CLOSE).build()))
+                .withExtraHeaders(Map.of("tenant", TenantContext.getCurrentTenant().orElse("")))
                 .to(AbcTramMessageConfig.commandChannel)
                 .build();
     }
 
-    public CommandWithDestination xyzRegisterCommand(Orders data) {
+    public CommandWithDestination xyzRegisterCommand(OrdersDTO data) {
+        log.info("SAGA xyzRegisterCommand tenant={}", TenantContext.getCurrentTenant());
         return send(new XyzRegisterCommand(XyzDTO.builder().id(data.getId()).name(data.getProductName()).status(XyzDTO.XyzStatus.ACTIVE).build()))
+                .withExtraHeaders(Map.of("tenant", TenantContext.getCurrentTenant().orElse("")))
                 .to(XyzTramMessageConfig.commandChannel)
                 .build();
     }
 
-    public void handleXyzReply(Orders data, XyzDTO reply) {
+    public void handleXyzReply(OrdersDTO data, XyzDTO reply) {
+        log.info("SAGA handleXyzReply tenant={}", TenantContext.getCurrentTenant());
         log.info("data = {}", data);
         log.info("reply = {}", reply);
 
-        XyzDTO xyzDTO = xyzService.getXyz(reply.getId());
-
-        log.info("xyzDTO = {}", xyzDTO);
+        try {
+            XyzDTO xyzDTO = eventuateSagaService.handleXyzReply(reply);
+            log.info("xyzDTO = {}", xyzDTO);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
-    public void handleAccountException(Orders data, Exception reply) {
+    public void handleAccountException(OrdersDTO data, Exception reply) {
+        log.info("SAGA handleAccountException tenant={}", TenantContext.getCurrentTenant());
         log.info(data.getId() + " - " + reply.toString());
+
+        eventuateSagaService.handleAccountException(data, reply);
     }
 
-    public void approve(Orders data) {
-        ordersRepository.findById(data.getId()).get().setStatus(OrdersDTO.OrdersStatus.APPROVED);
+    public void approve(OrdersDTO data) {
+        log.info("SAGA approve tenant={}", TenantContext.getCurrentTenant());
+        eventuateSagaService.approve(data);
     }
 }

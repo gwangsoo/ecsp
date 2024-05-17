@@ -1,7 +1,6 @@
 package com.example.abc.service;
 
 import com.example.abc.domain.dto.AbcDTO;
-import com.example.abc.domain.entity.Abc;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

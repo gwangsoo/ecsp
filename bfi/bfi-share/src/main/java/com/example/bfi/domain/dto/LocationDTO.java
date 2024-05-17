@@ -1,17 +1,19 @@
 package com.example.bfi.domain.dto;
 
+import com.example.bfi.domain.dto.enumeration.Facility;
+import com.example.bfi.domain.dto.enumeration.ParkingType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
- * A DTO for the {@link com.example.bfi.domain.entity.Location} entity.
+ *
  */
 @Schema(description = "충전소")
 @Data
@@ -56,7 +58,30 @@ public class LocationDTO extends AbstractAuditingDTO<String> implements Serializ
 
     private Boolean chargingWhenClosed;
 
-    private ZonedDateTime lastUpdated;
+    private Instant lastUpdated;
 
+    @Builder.Default
     private Set<EvseDTO> evses = new HashSet<>();
+
+    private PublishTokenTypeDTO publishTokenType;
+
+    private GeoLocationDTO coordinates;
+
+    private AdditionalGeoLocationDTO relatedLocations;
+
+    private ParkingType parkingType;
+
+    @Builder.Default
+    private Set<DisplayTextDTO> directions = new HashSet<>();
+
+    private BusinessDetailsDTO operator;
+    private BusinessDetailsDTO suboperator;
+    private BusinessDetailsDTO owner;
+
+    @Builder.Default
+    private Set<Facility> facilities = new HashSet<>();
+
+    @Builder.Default
+    private Set<HoursDTO> openingTimes = new HashSet<>();
+    private EnergyMixDTO energyMix;
 }
