@@ -484,6 +484,13 @@ docker-compose 실행 시 초기설정을 자동으로 구성되도록 함.
    }
    }
      ```
+2. token 
+토큰 테스트가 필요할시, gateway 통해서 로그인후 호출
+
+   http://localhost:8090/ 에서 로그인 후 http://localhost:8090/services/bff/graphiql 경로로 접근
+3. 토큰 테스트가 필요없을 시, bff, orders, xyz, abc 모두 profile : noauth 로 실행
+4. Todo
+-> mutation (CUD) 필요할 시 추가, 병렬 호출 시 I/F 정의, webflux 적용(필요시)
 
 
 ## 4. TODO
