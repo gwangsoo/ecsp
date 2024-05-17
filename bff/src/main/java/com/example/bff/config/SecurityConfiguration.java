@@ -5,34 +5,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
-import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerReactiveAuthenticationManagerResolver;
-import org.springframework.security.oauth2.server.resource.authentication.JwtReactiveAuthenticationManager;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
-import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
-import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
-import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
-import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers;
 
 @Configuration
-@EnableReactiveMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
-@EnableWebFluxSecurity
 public class SecurityConfiguration {
 
     private final ApplicationProperties applicationProperties;
@@ -42,82 +33,71 @@ public class SecurityConfiguration {
 
     @Profile("!noauth")
     @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         List<String> issuers = applicationProperties.getSecurity().getOauth2().getIssuers();
         issuers.forEach(issuer -> addManager(authenticationManagers, issuer));
 
         http
-            .securityMatcher(
-                new NegatedServerWebExchangeMatcher(
-                    new OrServerWebExchangeMatcher(pathMatchers("/app/**", "/i18n/**", "/content/**", "/swagger-ui/**"))
+                .cors(withDefaults())
+//            .csrf(csrf ->
+//                csrf
+//                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                    // See https://stackoverflow.com/q/74447118/65681
+//                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+//            )
+//            .addFilterAfter(new CookieCsrfFilter(), BasicAuthenticationFilter.class)
+                .authorizeHttpRequests(authz ->
+                        // prettier-ignore
+                        authz
+                                .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
+                                .requestMatchers(mvc.pattern("/api/auth-info")).permitAll()
+                                .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                                .requestMatchers(mvc.pattern("/management/health")).permitAll()
+                                .requestMatchers(mvc.pattern("/management/health/**")).permitAll()
+                                .requestMatchers(mvc.pattern("/management/info")).permitAll()
+                                .requestMatchers(mvc.pattern("/management/prometheus")).permitAll()
+                                .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                                // TODO authenticated 로 바꿀것!!
+                                .requestMatchers(mvc.pattern("/v3/api-docs/**")).permitAll()
+                                .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
+                                .requestMatchers(mvc.pattern("/graphiql/**")).permitAll()
+                                .requestMatchers(mvc.pattern("/api/**")).authenticated()
+                                .requestMatchers(mvc.pattern("/graphql")).authenticated()
                 )
-            )
-            .cors(x -> x.disable())
-            .csrf(x -> x.disable())
-            .formLogin(x -> x.disable())
-            .httpBasic(x -> x.disable())
-            .anonymous(x -> x.disable())
-            .logout(x -> x.disable())
-//            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-            .securityContextRepository(new WebSessionServerSecurityContextRepository())
-            .requestCache(cache -> cache.requestCache(NoOpServerRequestCache.getInstance()))
-            .headers(withDefaults())
-            .authorizeExchange(authz ->
-                // prettier-ignore
-                authz
-                    .pathMatchers("/api/authenticate").permitAll()
-                    .pathMatchers("/api/auth-info").permitAll()
-                    .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                    .pathMatchers("/management/health").permitAll()
-                    .pathMatchers("/management/health/**").permitAll()
-                    .pathMatchers("/management/info").permitAll()
-                    .pathMatchers("/management/prometheus").permitAll()
-                    .pathMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                    // TODO authenticated 로 바꿀것!!
-                    .pathMatchers("/v3/api-docs/**").permitAll()
-                    .pathMatchers("/swagger-ui/**").permitAll()
-                    .pathMatchers("/api/**").authenticated()
-            )
-//            .oauth2Client(withDefaults())
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .authenticationManagerResolver(authenticationManagerResolver))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .authenticationManagerResolver(authenticationManagerResolver))
+//            .oauth2Login(withDefaults())
+//            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter())))
+//            .oauth2Client()
         ;
         return http.build();
     }
 
     @Profile("noauth")
     @Bean
-    public SecurityWebFilterChain filterChainElse(ServerHttpSecurity http) throws Exception {
-         http
-            .cors(x -> x.disable())
-            .csrf(x -> x.disable())
-            .formLogin(x -> x.disable())
-            .httpBasic(x -> x.disable())
-            .anonymous(x -> x.disable())
-            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-            .requestCache(cache -> cache.requestCache(NoOpServerRequestCache.getInstance()))
-            .authorizeExchange(authz -> authz.anyExchange().permitAll())
+    public SecurityFilterChain filterChainElse(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+        http
+                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authz -> authz.requestMatchers(mvc.pattern("/**")).permitAll())
         ;
         return http.build();
     }
 
-    private Map<String, ReactiveAuthenticationManager> authenticationManagers = new HashMap<>();
+    private Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
 
-    private JwtIssuerReactiveAuthenticationManagerResolver authenticationManagerResolver =
-            new JwtIssuerReactiveAuthenticationManagerResolver(issuer -> Mono.justOrEmpty(authenticationManagers.get(issuer)));
+    private JwtIssuerAuthenticationManagerResolver authenticationManagerResolver =
+            new JwtIssuerAuthenticationManagerResolver(authenticationManagers::get);
 
-    private void addManager(Map<String, ReactiveAuthenticationManager> authenticationManagers, String issuer) {
-        Mono.fromCallable(() -> ReactiveJwtDecoders.fromIssuerLocation(issuer))
-                .subscribeOn(Schedulers.boundedElastic())
-                .map(JwtReactiveAuthenticationManager::new)
-                .doOnNext(authenticationManager -> authenticationManagers.put(issuer, authenticationManager))
-                .subscribe();
+    private void addManager(Map<String, AuthenticationManager> authenticationManagers, String issuer) {
+        JwtAuthenticationProvider authenticationProvider = new JwtAuthenticationProvider(JwtDecoders.fromOidcIssuerLocation(issuer));
+        authenticationManagers.put(issuer, authenticationProvider::authenticate);
     }
 
-//    @Bean
-//    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-//        return new MvcRequestMatcher.Builder(introspector);
-//    }
+    @Bean
+    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+        return new MvcRequestMatcher.Builder(introspector);
+    }
 
 //    Converter<Jwt, AbstractAuthenticationToken> authenticationConverter() {
 //        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

@@ -21,6 +21,13 @@ spring:
   autoconfigure:
     exclude:
       org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
+  graphql:
+    graphiql:
+      enabled: true
+    schema:
+      printer:
+        enabled: true                                   # jpa 의 show-sql 같이 graphql 쿼리를 출력해 줍니다.
+      locations: classpath:graphql/**/
 
   lifecycle:
     timeout-per-shutdown-phase: 20s

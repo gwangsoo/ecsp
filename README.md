@@ -449,7 +449,42 @@ docker-compose 실행 시 초기설정을 자동으로 구성되도록 함.
 
 ### 2.4. BFF
 
-* GraphQL or else (검토중)
+* Graphiql (graphql 테스트) : http://localhost:8091/services/bff/graphiql
+
+1. 링크 들어가서 다음과 같이 호출
+   > **Note**: xyz, abc, orders 각각 data insert 하고 호출해 볼 것
+     ```
+     {
+       getComposite {
+    ordersDTOList {
+      id
+      productId
+      productName
+      size
+      status
+    }
+    xyzDTOList {
+      id
+      name
+      age
+      status
+      xyzDetails {
+        id
+        attrName
+        attrValue
+      }
+    }
+    abcDTOList {
+      id
+      data
+      size
+      status
+      tenantId
+    }
+   }
+   }
+     ```
+
 
 ## 4. TODO
 

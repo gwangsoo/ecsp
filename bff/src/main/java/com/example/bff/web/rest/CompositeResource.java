@@ -1,17 +1,17 @@
 package com.example.bff.web.rest;
 
 import com.example.abc.domain.dto.AbcDTO;
+import com.example.bff.dto.CompositeDto;
 import com.example.bff.service.AsyncTestService;
 import com.example.orders.domain.dto.OrdersDTO;
 import com.example.xyz.domain.dto.XyzDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -100,12 +100,12 @@ public class CompositeResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("")
-    public ResponseEntity<CompositeDto> getAllOrders(@RequestParam(value = "status") final OrdersDTO.OrdersStatus status) {
+    public ResponseEntity<CompositeDto> getComposite() {
 //        log.debug("request={}", ReactiveSecurityContextHolder.getContext()
 //                .map(SecurityContext::getAuthentication).block());
 
         // 병렬 호출 테스트
-        CompletableFuture<List<OrdersDTO>> ordersResult = asyncTestService.getOrdersDTOList(status);
+        CompletableFuture<List<OrdersDTO>> ordersResult = asyncTestService.getOrdersDTOList(OrdersDTO.OrdersStatus.ACCEPTED);
         CompletableFuture<List<AbcDTO>> abcResult = asyncTestService.getAbcDTOList(AbcDTO.AbcStatus.OPEN);
         CompletableFuture<List<XyzDTO>> xyzResult = asyncTestService.getXyzDTOList("1", XyzDTO.XyzStatus.STANDBY);
 
@@ -122,16 +122,6 @@ public class CompositeResource {
         CompositeDto result = compositeResult.join();
         log.info("composite result ={}", result);
         return ResponseEntity.ok(result);
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    @NoArgsConstructor
-    public static class CompositeDto {
-        private List<OrdersDTO> ordersDTOList;
-        private List<AbcDTO> abcDTOList;
-        private List<XyzDTO> xyzDTOList;
     }
 
 

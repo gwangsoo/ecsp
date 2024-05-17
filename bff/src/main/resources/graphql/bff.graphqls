@@ -1,0 +1,45 @@
+# ----
+# Book
+
+type OrdersDTO {
+    id : String
+    productId : String!
+    productName : String!
+    size : Int!
+    status: String!
+}
+
+type AbcDTO {
+    id : String!
+    data : String!
+    size : Int!
+    status : String!
+    tenantId : String!
+}
+
+type XyzDTO {
+    id : String!
+    name : String!
+    age : Int!
+    status : String!
+    xyzDetails : [XyzDetailDTO]
+}
+
+type XyzDetailDTO {
+    id : String!
+    attrName : String!
+    attrValue : String!
+    xyzDto : XyzDTO
+}
+
+type Composite {
+    ordersDTOList : [OrdersDTO]
+    xyzDTOList : [XyzDTO]
+    abcDTOList : [AbcDTO]
+}
+
+
+
+type Query {
+    getComposite: Composite
+}

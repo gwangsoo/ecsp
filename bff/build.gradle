@@ -41,9 +41,10 @@ dependencies {
 //	implementation "org.springframework.boot:spring-boot-starter-logging"
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+//	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
@@ -56,10 +57,11 @@ dependencies {
 	implementation "io.github.openfeign:feign-jackson:${openfeignVersion}"
 	implementation "io.github.openfeign:feign-httpclient:${openfeignVersion}"
 
-	implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${openapiVersion}"
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapiVersion}"
 
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
