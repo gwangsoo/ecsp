@@ -54,6 +54,7 @@ spring:
       default-filters:
         - TokenRelay
 #        - CircuitBreaker=myCircuitBreaker
+        - AddRequestHeadersIfNotPresent=X-TenantID:HAE
       enabled: true
       discovery:
         locator:
@@ -75,23 +76,37 @@ spring:
         - id: bff
           uri: http://localhost:8091
           predicates:
+            - Host={segment}
             - Path=/services/bff/**
+          filters:
+            - AddRequestHeader=X-TenantID, {segment}
         - id: abc
           uri: http://localhost:8082
           predicates:
+            - Host={segment}*
             - Path=/services/abc/**
+          filters:
+            - AddRequestHeader=X-TenantID, {segment}
         - id: xyz
           uri: http://localhost:8083
           predicates:
+            - Host={segment}:*
             - Path=/services/xyz/**
+          filters:
+            - AddRequestHeader=X-TenantID, {segment}
         - id: orders
           uri: http://localhost:8084
           predicates:
+            - Host={segment}host*
             - Path=/services/orders/**
+          filters:
+            - AddRequestHeader=X-TenantID, {segment}
         - id: bfi
           uri: http://localhost:8085
           predicates:
             - Path=/services/bfi/**
+#          filters:
+#            - AddRequestHeader=X-TenantID, {segment:public}
 
 management:
   endpoints:

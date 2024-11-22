@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.oidc.web.server.logout.OidcCli
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter;
 
 import java.net.URI;
@@ -41,6 +42,7 @@ public class SecurityConfig {
 				logoutSpec
 					.logoutUrl("/logout")
 					.logoutSuccessHandler(handler))
+			.securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
 			;
 
 		return http.build();
